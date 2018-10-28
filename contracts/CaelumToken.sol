@@ -32,6 +32,8 @@
         swapStartedBlock = now;
       }
 
+      // TESTNET: REMOVE BEFORE LIVE !!!
+      // MUST BE HARDCODED.
       function setSwap(address _t) public {
         allowedSwapAddress01 = _t;
       }
@@ -54,10 +56,8 @@
        */
       function upgradeTokens(address _token) public{
 
-          /** TODO: On truffle, commented out function error for no reason. Check. **/
-
           require(!swapClosed, "Swap function is closed. Please use the manualUpgradeTokens function");
-          //require(!hasSwapped[msg.sender], "User already swapped");
+          require(!hasSwapped[msg.sender], "User already swapped");
           require(now <= swapStartedBlock + 1 days, "Timeframe exipred, please use manualUpgradeTokens function");
           require(_token == allowedSwapAddress01 || _token == allowedSwapAddress02, "Token not allowed to swap.");
 
@@ -79,13 +79,12 @@
        * Dev should manually verify the origin of these tokens before allowing it.
        * @param _token Token the user wants to swap.
        */
-
       function manualUpgradeTokens(address _token) public {
 
           /** TODO: On truffle, commented out function error for no reason. Check. **/
 
-          //require(!swapClosed, "Swap function is closed. Please use the manualUpgradeTokens function");
-          //require(!hasSwapped[msg.sender], "User already swapped");
+          require(!swapClosed, "Swap function is closed. Please use the manualUpgradeTokens function");
+          require(!hasSwapped[msg.sender], "User already swapped");
           require(now <= swapStartedBlock + 1 days, "Timeframe exipred, please use manualUpgradeTokens function");
           require(_token == allowedSwapAddress01 || _token == allowedSwapAddress02, "Token not allowed to swap.");
 
@@ -99,6 +98,16 @@
           }
       }
 
+
+      /**
+       * @dev Due to some bugs in the previous contracts, a handfull of users will
+       * be unable to fully withdraw their masternodes. Owner can replace those tokens
+       * who are forever locked up in the old contract with new ones.
+
+       */
+      function replaceLockedTokens(address _holder, uint _tokenamount) onlyOwner {
+
+      }
       /**
        * @dev Approve a request for manual token swaps
        * @param _holder Holder The user who requests a swap.
