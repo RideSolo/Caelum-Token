@@ -1,0 +1,59 @@
+var _clmTOKEN = artifacts.require("./CaelumToken.sol");
+var _clmSwapTOKEN = artifacts.require("./CaelumTokenToSwap.sol");
+
+
+let catchRevert = require("./exceptions.js").catchRevert;
+
+contract('CaelumToken main functions', function(accounts) {
+  var swapToken
+  var mainToken
+
+  it("can deploy ", async function () {
+    console.log("\n Swap tests \n");
+    swapToken = await _clmSwapTOKEN.deployed();
+    mainToken = await _clmTOKEN.deployed(swapToken.address);
+  })
+
+  // Token swap
+
+  it('Should set the old token address on the new contract', async function() {
+    let swapTokens = await mainToken.setSwap(swapToken.address);
+    //assert.ok(swapTokens);
+  });
+
+  it("Should have 420.000 tokens on the old contract", async function () {
+    let getBalance = await swapToken.balanceOf.call(accounts[0]);
+    assert.equal  (getBalance.valueOf(), 420000 *1e8);
+  })
+
+  it("Should not have any tokens on the new contract", async function () {
+    let getBalance = await mainToken.balanceOf.call(accounts[0]);
+    assert.equal  (getBalance.valueOf(), 0);
+  })
+
+  it('Should be able to approve account to spend 20.000 tokens from old contract', async function() {
+    let callApprove = await swapToken.approve(mainToken.address, 20000 * 1e18);
+    assert.ok(callApprove);
+  });
+
+  it('Verify if new contract has allowance on old token contract', async function() {
+    let allowance = await swapToken.allowance(accounts[0], mainToken.address);
+    assert.equal(allowance, 20000 * 1e18);
+  });
+
+  it('Account 0 should now should be able to swap 10 tokens to masternode contract', async function() {
+    let swapTokens = await mainToken.upgradeTokens(swapToken.address);
+    assert.ok(swapTokens);
+  });
+
+  it('Account 0 should now have 420.000 new tokens as balance', async function() {
+    let getBalance = await mainToken.balanceOf.call(accounts[0]);
+    assert.equal  (getBalance.valueOf(), 420000 * 1e8);
+  });
+
+  it('Account 0 should now have 0 old tokens as balance', async function() {
+    let getBalance = await swapToken.balanceOf.call(accounts[0]);
+    assert.equal  (getBalance.valueOf(), 0);
+  });
+
+})

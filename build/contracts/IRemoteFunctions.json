@@ -40,10 +40,10 @@
     "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/IRemoteFunctions.sol",
     "exportedSymbols": {
       "IRemoteFunctions": [
-        869
+        871
       ]
     },
-    "id": 870,
+    "id": 872,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -52,9 +52,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 869,
+        "id": 871,
         "linearizedBaseContracts": [
-          869
+          871
         ],
         "name": "IRemoteFunctions",
         "nodeType": "ContractDefinition",
@@ -62,7 +62,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 863,
+            "id": 865,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -70,15 +70,15 @@
             "name": "_externalAddMasternode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 861,
+              "id": 863,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 860,
+                  "id": 862,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 863,
+                  "scope": 865,
                   "src": "64:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -87,7 +87,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 859,
+                    "id": 861,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "64:7:4",
@@ -104,12 +104,12 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 862,
+              "id": 864,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "81:0:4"
             },
-            "scope": 869,
+            "scope": 871,
             "src": "32:50:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -118,7 +118,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 868,
+            "id": 870,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -126,15 +126,15 @@
             "name": "_externalStopMasternode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 866,
+              "id": 868,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 865,
+                  "id": 867,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 868,
+                  "scope": 870,
                   "src": "119:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -143,7 +143,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 864,
+                    "id": 866,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "119:7:4",
@@ -160,19 +160,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 867,
+              "id": 869,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "136:0:4"
             },
-            "scope": 869,
+            "scope": 871,
             "src": "86:51:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 870,
+        "scope": 872,
         "src": "0:140:4"
       }
     ],
@@ -182,10 +182,10 @@
     "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/IRemoteFunctions.sol",
     "exportedSymbols": {
       "IRemoteFunctions": [
-        869
+        871
       ]
     },
-    "id": 870,
+    "id": 872,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -194,9 +194,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 869,
+        "id": 871,
         "linearizedBaseContracts": [
-          869
+          871
         ],
         "name": "IRemoteFunctions",
         "nodeType": "ContractDefinition",
@@ -204,7 +204,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 863,
+            "id": 865,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -212,15 +212,15 @@
             "name": "_externalAddMasternode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 861,
+              "id": 863,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 860,
+                  "id": 862,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 863,
+                  "scope": 865,
                   "src": "64:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -229,7 +229,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 859,
+                    "id": 861,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "64:7:4",
@@ -246,12 +246,12 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 862,
+              "id": 864,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "81:0:4"
             },
-            "scope": 869,
+            "scope": 871,
             "src": "32:50:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -260,7 +260,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 868,
+            "id": 870,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -268,15 +268,15 @@
             "name": "_externalStopMasternode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 866,
+              "id": 868,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 865,
+                  "id": 867,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 868,
+                  "scope": 870,
                   "src": "119:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -285,7 +285,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 864,
+                    "id": 866,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "119:7:4",
@@ -302,19 +302,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 867,
+              "id": 869,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "136:0:4"
             },
-            "scope": 869,
+            "scope": 871,
             "src": "86:51:4",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 870,
+        "scope": 872,
         "src": "0:140:4"
       }
     ],
@@ -326,5 +326,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-10-28T10:06:56.972Z"
+  "updatedAt": "2018-10-28T10:39:43.816Z"
 }

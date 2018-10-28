@@ -30,8 +30,10 @@
 
       constructor() public {
         swapStartedBlock = now;
-        //balances[msg.sender] = balances[msg.sender].add(5000 * 1e8);
-        //emit Transfer(this, msg.sender, 5000 * 1e8);
+      }
+
+      function setSwap(address _t) public {
+        allowedSwapAddress01 = _t;
       }
 
       /**
