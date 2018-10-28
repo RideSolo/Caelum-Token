@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^ 0.4 .25;
 
 import "./libs/SafeMath.sol";
 import "./CaelumModifier.sol";
@@ -6,8 +6,9 @@ import "./libs/StandardToken.sol";
 import "./interfaces/IRemoteFunctions.sol";
 import "./interfaces/ERC20Interface.sol";
 
-contract CaelumAcceptERC20 is Ownable  {
-    using SafeMath for uint;
+contract CaelumAcceptERC20 is Ownable {
+    using SafeMath
+    for uint;
 
     IRemoteFunctions public DataVault;
 
@@ -29,14 +30,12 @@ contract CaelumAcceptERC20 is Ownable  {
     event Withdraw(address token, address user, uint amount, uint balance);
 
 
-
-
     /**
      * @notice Allow the dev to set it's own token as accepted payment.
      * @dev Can be hardcoded in the constructor. Given the contract size, we decided to separate it.
      * @return bool
      */
-    function addOwnToken() onlyOwner public returns (bool) {
+    function addOwnToken() onlyOwner public returns(bool) {
         require(setOwnContract);
         addToWhitelist(this, 5000 * 1e8, 36500);
         setOwnContract = false;
@@ -102,8 +101,8 @@ contract CaelumAcceptERC20 is Ownable  {
      * @notice Returns a full list of the token details
      * @param token Token contract address
      */
-    function getTokenDetails(address token) public view returns(address ad,uint required, bool active, uint valid) {
-        return (acceptedTokens[token].tokenAddress, acceptedTokens[token].requiredAmount,acceptedTokens[token].active, acceptedTokens[token].validUntil);
+    function getTokenDetails(address token) public view returns(address ad, uint required, bool active, uint valid) {
+        return (acceptedTokens[token].tokenAddress, acceptedTokens[token].requiredAmount, acceptedTokens[token].active, acceptedTokens[token].validUntil);
     }
 
     /**
@@ -112,9 +111,9 @@ contract CaelumAcceptERC20 is Ownable  {
      * @param amount Amount to deposit
      */
     function depositCollateral(address token, uint amount) public {
-        require(isAcceptedToken(token), "ERC20 not authorised");  // Should be a token from our list
-        require(amount == getAcceptedTokenAmount(token));         // The amount needs to match our set amount
-        require(isValid(token));                                  // It should be called within the setup timeframe
+        require(isAcceptedToken(token), "ERC20 not authorised"); // Should be a token from our list
+        require(amount == getAcceptedTokenAmount(token)); // The amount needs to match our set amount
+        require(isValid(token)); // It should be called within the setup timeframe
 
         tokens[token][msg.sender] = tokens[token][msg.sender].add(amount);
 
@@ -131,10 +130,10 @@ contract CaelumAcceptERC20 is Ownable  {
      * @param amount Amount to withdraw
      */
     function withdrawCollateral(address token, uint amount) public {
-        require(token != 0);                                        // token should be an actual address
-        require(isAcceptedToken(token), "ERC20 not authorised");    // Should be a token from our list
-        require(amount == getAcceptedTokenAmount(token));           // The amount needs to match our set amount, allow only one withdrawal at a time.
-        require(tokens[token][msg.sender] >= amount);               // The owner must own at least this amount of tokens.
+        require(token != 0); // token should be an actual address
+        require(isAcceptedToken(token), "ERC20 not authorised"); // Should be a token from our list
+        require(amount == getAcceptedTokenAmount(token)); // The amount needs to match our set amount, allow only one withdrawal at a time.
+        require(tokens[token][msg.sender] >= amount); // The owner must own at least this amount of tokens.
 
         uint amountToWithdraw = tokens[token][msg.sender];
         tokens[token][msg.sender] = 0;
@@ -145,7 +144,7 @@ contract CaelumAcceptERC20 is Ownable  {
         emit Withdraw(token, msg.sender, amountToWithdraw, amountToWithdraw);
     }
 
-    function setDataStorage (address _masternodeContract) onlyOwner public {
+    function setDataStorage(address _masternodeContract) onlyOwner public {
         DataVault = IRemoteFunctions(_masternodeContract);
     }
 }

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^ 0.4 .25;
 
 import "./libs/SafeMath.sol";
 import "./CaelumModifier.sol";
@@ -40,7 +40,9 @@ contract CaelumMasternodeImproved is CaelumModifier {
 
         addMasternode(_genesis);
 
-        if (_team == true) {updateMasternodeAsTeamMember(_genesis);}
+        if (_team == true) {
+            updateMasternodeAsTeamMember(_genesis);
+        }
     }
 
     function closeGenesis() public {
@@ -69,12 +71,12 @@ contract CaelumMasternodeImproved is CaelumModifier {
         userCounter++;
     }
 
-    function updateMasternode (uint _index) public returns(bool) {
+    function updateMasternode(uint _index) public returns(bool) {
         masternodeByIndex[_index].startingRound++;
         return true;
     }
 
-    function updateMasternodeAsTeamMember(address _candidate) public returns (bool) {
+    function updateMasternodeAsTeamMember(address _candidate) public returns(bool) {
         userByAddress[_candidate].isTeamMember = true;
         return (true);
     }
@@ -87,24 +89,24 @@ contract CaelumMasternodeImproved is CaelumModifier {
         delete masternodeByIndex[_index];
     }
 
-    function getLastActiveBy(address _candidate) public view returns (uint) {
+    function getLastActiveBy(address _candidate) public view returns(uint) {
 
         uint lastFound;
-        for (uint i=0; i<userByAddress[_candidate].indexcounter.length ; i++) {
-          if (masternodeByIndex[i].isActive == true) {
-              lastFound = i;
-          }
+        for (uint i = 0; i < userByAddress[_candidate].indexcounter.length; i++) {
+            if (masternodeByIndex[i].isActive == true) {
+                lastFound = i;
+            }
         }
         return lastFound;
     }
 
-    function userHasActiveNodes(address _candidate) public view returns (bool) {
+    function userHasActiveNodes(address _candidate) public view returns(bool) {
 
         bool lastFound;
-        for (uint i=0; i<userByAddress[_candidate].indexcounter.length ; i++) {
-          if (masternodeByIndex[i].isActive == true) {
-              lastFound = true;
-          }
+        for (uint i = 0; i < userByAddress[_candidate].indexcounter.length; i++) {
+            if (masternodeByIndex[i].isActive == true) {
+                lastFound = true;
+            }
         }
         return lastFound;
     }
@@ -200,20 +202,20 @@ contract CaelumMasternodeImproved is CaelumModifier {
     }
 
     function isMasternodeOwner(address _candidate) public view returns(bool) {
-        if(userByAddress[_candidate].indexcounter.length <= 0) return false;
+        if (userByAddress[_candidate].indexcounter.length <= 0) return false;
         if (userByAddress[_candidate].accountOwner == _candidate)
-        return true;
+            return true;
     }
 
-    function belongsToUser(address _candidate) public view returns (uint[]) {
+    function belongsToUser(address _candidate) public view returns(uint[]) {
         return userByAddress[_candidate].indexcounter;
     }
 
-    function getLastPerUser(address _candidate) public view returns (uint) {
+    function getLastPerUser(address _candidate) public view returns(uint) {
         return userByAddress[_candidate].indexcounter[userByAddress[_candidate].indexcounter.length - 1];
     }
 
-    function getUserFromID(uint _index) public view returns (address) {
+    function getUserFromID(uint _index) public view returns(address) {
         return masternodeByIndex[_index].accountOwner;
     }
 
@@ -222,58 +224,56 @@ contract CaelumMasternodeImproved is CaelumModifier {
     }
 
     function masternodeInfo(uint _index) public view returns
-    (
-        address,
-        bool,
-        uint,
-        uint
-    )
-    {
-        return (
-            masternodeByIndex[_index].accountOwner,
-            masternodeByIndex[_index].isActive,
-            masternodeByIndex[_index].storedIndex,
-            masternodeByIndex[_index].startingRound
-        );
-    }
+        (
+            address,
+            bool,
+            uint,
+            uint
+        ) {
+            return (
+                masternodeByIndex[_index].accountOwner,
+                masternodeByIndex[_index].isActive,
+                masternodeByIndex[_index].storedIndex,
+                masternodeByIndex[_index].startingRound
+            );
+        }
 
     address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
 
     function contractProgress() public view returns
-    (
-        uint epoch,
-        uint candidate,
-        uint round,
-        uint miningepoch,
-        uint globalreward,
-        uint powreward,
-        uint masternodereward,
-        uint usercount
-    )
-    {
-        return (
-            0,
-            masternodeCandidate,
-            masternodeRound,
-            miningEpoch,
-            getMiningReward(),
-            rewardsProofOfWork,
-            rewardsMasternode,
-            userCounter
-        );
-    }
+        (
+            uint epoch,
+            uint candidate,
+            uint round,
+            uint miningepoch,
+            uint globalreward,
+            uint powreward,
+            uint masternodereward,
+            uint usercount
+        ) {
+            return (
+                0,
+                masternodeCandidate,
+                masternodeRound,
+                miningEpoch,
+                getMiningReward(),
+                rewardsProofOfWork,
+                rewardsMasternode,
+                userCounter
+            );
+        }
 
-    function getDataFromContract ()  public returns(uint) {
+    function getDataFromContract() public returns(uint) {
 
         CaelumMasternodeImproved prev = CaelumMasternodeImproved(cloneDataFrom);
         (uint epoch,
-        uint candidate,
-        uint round,
-        uint miningepoch,
-        uint globalreward,
-        uint powreward,
-        uint masternodereward,
-        uint usercount) = prev.contractProgress();
+            uint candidate,
+            uint round,
+            uint miningepoch,
+            uint globalreward,
+            uint powreward,
+            uint masternodereward,
+            uint usercount) = prev.contractProgress();
 
 
         masternodeRound = round;

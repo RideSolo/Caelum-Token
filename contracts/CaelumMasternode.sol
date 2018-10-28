@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^ 0.4 .25;
 
 import "./interfaces/ICaelumMiner.sol";
 import "./CaelumMasternodeImproved.sol";
@@ -12,7 +12,7 @@ contract CaelumMasternode is CaelumMasternodeImproved {
     /**
      * @dev Use this to externaly call the _arrangeMasternodeFlow function. ALWAYS set a modifier !
      */
-    function _externalArrangeFlow()  public {
+    function _externalArrangeFlow() public {
         _arrangeMasternodeFlow();
     }
 
@@ -36,17 +36,17 @@ contract CaelumMasternode is CaelumMasternodeImproved {
 
     address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
 
-    function getDataFromContract () onlyOwner public returns(uint) {
+    function getDataFromContract() onlyOwner public returns(uint) {
 
         CaelumMasternode prev = CaelumMasternode(cloneDataFrom);
         (uint epoch,
-        uint candidate,
-        uint round,
-        uint miningepoch,
-        uint globalreward,
-        uint powreward,
-        uint masternodereward,
-        uint usercounter) = prev.contractProgress();
+            uint candidate,
+            uint round,
+            uint miningepoch,
+            uint globalreward,
+            uint powreward,
+            uint masternodereward,
+            uint usercounter) = prev.contractProgress();
 
         //masternodeEpoch = epoch;
         masternodeRound = round;
