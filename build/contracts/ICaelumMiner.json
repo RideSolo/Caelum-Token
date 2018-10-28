@@ -1,0 +1,204 @@
+{
+  "contractName": "ICaelumMiner",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "getMiningReward",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "interface ICaelumMiner {\r\n    function getMiningReward() external returns (uint) ;\r\n}\r\n",
+  "sourcePath": "C:\\Users\\steve\\Documents\\GitHub\\CAELUM\\Caelum-token\\contracts\\interfaces\\ICaelumMiner.sol",
+  "ast": {
+    "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/ICaelumMiner.sol",
+    "exportedSymbols": {
+      "ICaelumMiner": [
+        815
+      ]
+    },
+    "id": 816,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 815,
+        "linearizedBaseContracts": [
+          815
+        ],
+        "name": "ICaelumMiner",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 814,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "getMiningReward",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 810,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "54:2:6"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 813,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 812,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 814,
+                  "src": "75:4:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 811,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "75:4:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "74:6:6"
+            },
+            "scope": 815,
+            "src": "30:52:6",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 816,
+        "src": "0:85:6"
+      }
+    ],
+    "src": "0:87:6"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/ICaelumMiner.sol",
+    "exportedSymbols": {
+      "ICaelumMiner": [
+        815
+      ]
+    },
+    "id": 816,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 815,
+        "linearizedBaseContracts": [
+          815
+        ],
+        "name": "ICaelumMiner",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 814,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "getMiningReward",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 810,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "54:2:6"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 813,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 812,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 814,
+                  "src": "75:4:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 811,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "75:4:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "74:6:6"
+            },
+            "scope": 815,
+            "src": "30:52:6",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 816,
+        "src": "0:85:6"
+      }
+    ],
+    "src": "0:87:6"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-10-28T09:53:04.466Z"
+}

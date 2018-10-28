@@ -1,0 +1,260 @@
+{
+  "contractName": "ICaelumToken",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        },
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "rewardExternal",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "interface ICaelumToken {\r\n    function rewardExternal(address, uint) external;\r\n}\r\n",
+  "sourcePath": "C:\\Users\\steve\\Documents\\GitHub\\CAELUM\\Caelum-token\\contracts\\interfaces\\ICaelumToken.sol",
+  "ast": {
+    "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/ICaelumToken.sol",
+    "exportedSymbols": {
+      "ICaelumToken": [
+        824
+      ]
+    },
+    "id": 825,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 824,
+        "linearizedBaseContracts": [
+          824
+        ],
+        "name": "ICaelumToken",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 823,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "rewardExternal",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 821,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 818,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 823,
+                  "src": "54:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 817,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "54:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 820,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 823,
+                  "src": "63:4:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 819,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "63:4:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "53:15:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 822,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "77:0:7"
+            },
+            "scope": 824,
+            "src": "30:48:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 825,
+        "src": "0:81:7"
+      }
+    ],
+    "src": "0:83:7"
+  },
+  "legacyAST": {
+    "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/ICaelumToken.sol",
+    "exportedSymbols": {
+      "ICaelumToken": [
+        824
+      ]
+    },
+    "id": 825,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 824,
+        "linearizedBaseContracts": [
+          824
+        ],
+        "name": "ICaelumToken",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 823,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "rewardExternal",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 821,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 818,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 823,
+                  "src": "54:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 817,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "54:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 820,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 823,
+                  "src": "63:4:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 819,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "63:4:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "53:15:7"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 822,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "77:0:7"
+            },
+            "scope": 824,
+            "src": "30:48:7",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 825,
+        "src": "0:81:7"
+      }
+    ],
+    "src": "0:83:7"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-10-28T09:53:04.466Z"
+}
