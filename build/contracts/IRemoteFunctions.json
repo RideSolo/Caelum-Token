@@ -40,10 +40,10 @@
     "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/IRemoteFunctions.sol",
     "exportedSymbols": {
       "IRemoteFunctions": [
-        946
+        1912
       ]
     },
-    "id": 947,
+    "id": 1913,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -52,9 +52,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 946,
+        "id": 1912,
         "linearizedBaseContracts": [
-          946
+          1912
         ],
         "name": "IRemoteFunctions",
         "nodeType": "ContractDefinition",
@@ -62,7 +62,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 940,
+            "id": 1906,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -70,16 +70,16 @@
             "name": "_externalAddMasternode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 938,
+              "id": 1904,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 937,
+                  "id": 1903,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 940,
-                  "src": "64:7:5",
+                  "scope": 1906,
+                  "src": "64:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -87,10 +87,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 936,
+                    "id": 1902,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "64:7:5",
+                    "src": "64:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -100,17 +100,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "63:9:5"
+              "src": "63:9:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 939,
+              "id": 1905,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "81:0:5"
+              "src": "81:0:8"
             },
-            "scope": 946,
-            "src": "32:50:5",
+            "scope": 1912,
+            "src": "32:50:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -118,7 +118,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 945,
+            "id": 1911,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -126,16 +126,16 @@
             "name": "_externalStopMasternode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 943,
+              "id": 1909,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 942,
+                  "id": 1908,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 945,
-                  "src": "119:7:5",
+                  "scope": 1911,
+                  "src": "119:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -143,10 +143,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 941,
+                    "id": 1907,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "119:7:5",
+                    "src": "119:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -156,36 +156,36 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "118:9:5"
+              "src": "118:9:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 944,
+              "id": 1910,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "136:0:5"
+              "src": "136:0:8"
             },
-            "scope": 946,
-            "src": "86:51:5",
+            "scope": 1912,
+            "src": "86:51:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 947,
-        "src": "0:140:5"
+        "scope": 1913,
+        "src": "0:140:8"
       }
     ],
-    "src": "0:142:5"
+    "src": "0:142:8"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/IRemoteFunctions.sol",
     "exportedSymbols": {
       "IRemoteFunctions": [
-        946
+        1912
       ]
     },
-    "id": 947,
+    "id": 1913,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -194,9 +194,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 946,
+        "id": 1912,
         "linearizedBaseContracts": [
-          946
+          1912
         ],
         "name": "IRemoteFunctions",
         "nodeType": "ContractDefinition",
@@ -204,7 +204,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 940,
+            "id": 1906,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -212,16 +212,16 @@
             "name": "_externalAddMasternode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 938,
+              "id": 1904,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 937,
+                  "id": 1903,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 940,
-                  "src": "64:7:5",
+                  "scope": 1906,
+                  "src": "64:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -229,10 +229,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 936,
+                    "id": 1902,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "64:7:5",
+                    "src": "64:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -242,17 +242,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "63:9:5"
+              "src": "63:9:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 939,
+              "id": 1905,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "81:0:5"
+              "src": "81:0:8"
             },
-            "scope": 946,
-            "src": "32:50:5",
+            "scope": 1912,
+            "src": "32:50:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
@@ -260,7 +260,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 945,
+            "id": 1911,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -268,16 +268,16 @@
             "name": "_externalStopMasternode",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 943,
+              "id": 1909,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 942,
+                  "id": 1908,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 945,
-                  "src": "119:7:5",
+                  "scope": 1911,
+                  "src": "119:7:8",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -285,10 +285,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 941,
+                    "id": 1907,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "119:7:5",
+                    "src": "119:7:8",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -298,27 +298,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "118:9:5"
+              "src": "118:9:8"
             },
             "payable": false,
             "returnParameters": {
-              "id": 944,
+              "id": 1910,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "136:0:5"
+              "src": "136:0:8"
             },
-            "scope": 946,
-            "src": "86:51:5",
+            "scope": 1912,
+            "src": "86:51:8",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 947,
-        "src": "0:140:5"
+        "scope": 1913,
+        "src": "0:140:8"
       }
     ],
-    "src": "0:142:5"
+    "src": "0:142:8"
   },
   "compiler": {
     "name": "solc",
@@ -326,5 +326,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-10-28T12:24:12.576Z"
+  "updatedAt": "2018-10-28T12:36:47.849Z"
 }

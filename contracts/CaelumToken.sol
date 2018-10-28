@@ -24,6 +24,7 @@
 
       uint swapStartedBlock;
 
+
       mapping(address => uint) manualSwaps;
       mapping(address => bool) hasSwapped;
 
@@ -93,11 +94,10 @@
 
           if(ERC20(_token).transferFrom(msg.sender, this, amountToUpgrade)){
               require(ERC20(_token).balanceOf(msg.sender) == 0);
-              //hasSwapped[msg.sender] = true;
-              //manualSwaps[msg.sender] = amountToUpgrade;
+              hasSwapped[msg.sender] = true;
+              manualSwaps[msg.sender] = amountToUpgrade;
           }
       }
-
 
       /**
        * @dev Due to some bugs in the previous contracts, a handfull of users will
@@ -105,9 +105,24 @@
        * who are forever locked up in the old contract with new ones.
 
        */
-      function replaceLockedTokens(address _holder, uint _tokenamount) onlyOwner {
+       function replaceLockedTokens(address _holder) onlyOwner public {
+          uint amountLocked = getLockedTokens(_holder);
+          
+          balances[_holder] = balances[_holder].add(amountLocked);
+          emit Transfer(this, _holder, amountLocked);
 
-      }
+          hasSwapped[msg.sender] = true;
+       }
+
+      /**
+       * @dev Due to some bugs in the previous contracts, a handfull of users will
+       * be unable to fully withdraw their masternodes. Owner can replace those tokens
+       * who are forever locked up in the old contract with new ones.
+
+       */
+       function getLockedTokens(address _holder) public view returns (uint) {
+          return CaelumAcceptERC20(this).tokens(this, _holder);
+       }
       /**
        * @dev Approve a request for manual token swaps
        * @param _holder Holder The user who requests a swap.

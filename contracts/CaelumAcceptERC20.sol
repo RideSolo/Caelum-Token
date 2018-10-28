@@ -141,7 +141,7 @@ contract CaelumAcceptERC20 is Ownable  {
 
         DataVault._externalStopMasternode(msg.sender);
 
-        //if (!StandardToken(token).transfer(msg.sender, amountToWithdraw)) revert("error msg");
+        if (!StandardToken(token).transfer(msg.sender, amountToWithdraw)) revert("error msg");
         emit Withdraw(token, msg.sender, amountToWithdraw, amountToWithdraw);
     }
 

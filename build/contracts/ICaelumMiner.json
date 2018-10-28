@@ -26,10 +26,10 @@
     "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/ICaelumMiner.sol",
     "exportedSymbols": {
       "ICaelumMiner": [
-        815
+        1900
       ]
     },
-    "id": 816,
+    "id": 1901,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -38,9 +38,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 815,
+        "id": 1900,
         "linearizedBaseContracts": [
-          815
+          1900
         ],
         "name": "ICaelumMiner",
         "nodeType": "ContractDefinition",
@@ -48,7 +48,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 814,
+            "id": 1899,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -56,23 +56,23 @@
             "name": "getMiningReward",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 810,
+              "id": 1895,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "54:2:6"
+              "src": "54:2:7"
             },
             "payable": false,
             "returnParameters": {
-              "id": 813,
+              "id": 1898,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 812,
+                  "id": 1897,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 814,
-                  "src": "75:4:6",
+                  "scope": 1899,
+                  "src": "75:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -80,10 +80,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 811,
+                    "id": 1896,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "75:4:6",
+                    "src": "75:4:7",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -93,29 +93,29 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "74:6:6"
+              "src": "74:6:7"
             },
-            "scope": 815,
-            "src": "30:52:6",
+            "scope": 1900,
+            "src": "30:52:7",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 816,
-        "src": "0:85:6"
+        "scope": 1901,
+        "src": "0:85:7"
       }
     ],
-    "src": "0:87:6"
+    "src": "0:87:7"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/steve/Documents/GitHub/CAELUM/Caelum-token/contracts/interfaces/ICaelumMiner.sol",
     "exportedSymbols": {
       "ICaelumMiner": [
-        815
+        1900
       ]
     },
-    "id": 816,
+    "id": 1901,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -124,9 +124,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 815,
+        "id": 1900,
         "linearizedBaseContracts": [
-          815
+          1900
         ],
         "name": "ICaelumMiner",
         "nodeType": "ContractDefinition",
@@ -134,7 +134,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 814,
+            "id": 1899,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -142,23 +142,23 @@
             "name": "getMiningReward",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 810,
+              "id": 1895,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "54:2:6"
+              "src": "54:2:7"
             },
             "payable": false,
             "returnParameters": {
-              "id": 813,
+              "id": 1898,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 812,
+                  "id": 1897,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 814,
-                  "src": "75:4:6",
+                  "scope": 1899,
+                  "src": "75:4:7",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -166,10 +166,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 811,
+                    "id": 1896,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "75:4:6",
+                    "src": "75:4:7",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -179,20 +179,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "74:6:6"
+              "src": "74:6:7"
             },
-            "scope": 815,
-            "src": "30:52:6",
+            "scope": 1900,
+            "src": "30:52:7",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "external"
           }
         ],
-        "scope": 816,
-        "src": "0:85:6"
+        "scope": 1901,
+        "src": "0:85:7"
       }
     ],
-    "src": "0:87:6"
+    "src": "0:87:7"
   },
   "compiler": {
     "name": "solc",
@@ -200,5 +200,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-10-28T09:53:04.466Z"
+  "updatedAt": "2018-10-28T12:36:47.856Z"
 }
