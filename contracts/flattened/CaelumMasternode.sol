@@ -170,9 +170,9 @@ contract CaelumModifier is Ownable {
 
 }
 
-// File: contracts\CaelumMasternodeImproved.sol
+// File: contracts\CaelumAbstractMasternode.sol
 
-contract CaelumMasternodeImproved is CaelumModifier {
+contract CaelumAbstractMasternode is CaelumModifier {
 
     struct MasterNode {
         address accountOwner;
@@ -201,24 +201,44 @@ contract CaelumMasternodeImproved is CaelumModifier {
 
     bool genesisAdded = false;
 
+    address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
+
     event NewMasternode(address candidateAddress, uint timeStamp);
     event RemovedMasternode(address candidateAddress, uint timeStamp);
 
-    function addGenesis(address _genesis, bool _team) public {
+
+    address [] public genesisList = [
+      0xdb93ce3cca2444ce5da5522a85758af79af0092d,
+      0x375e97e59de97be46d332ba17185620b81bdb7cc,
+      0x14db686439aad3c076b793335bc14d9039f32c54,
+      0x1ba4b0280163889e7ee4ab5269c442971f48d13e,
+      0xe4ac657af0690e9437f36d3e96886dc880b24404,
+      0x8fcf0027e1e91a12981fbc6371de39a269c3a47,
+      0x3d664b7b0eb158798f3e797e194fee50dd748742,
+      0xb85ac167079020d93033a014efead75f14018522,
+      0xc6d00915cbcf9abe9b27403f8d2338551f4ac43b,
+      0x5256fe3f8e50e0f7f701525e814a2767da2cca06,
+      0x2cf23c6610a70d58d61efbdefd6454960b200c2c
+    ];
+
+    function addGenesis(address _genesis, bool _team) onlyOwner public {
         require(!genesisAdded);
 
-        addMasternode(_genesis);
+        for (uint i=0; i<genesisList.length; i++) {
+          addMasternode(genesisList[i]);
+        }
+
 
         if (_team == true) {
             updateMasternodeAsTeamMember(_genesis);
         }
     }
 
-    function closeGenesis() public {
+    function closeGenesis() onlyOwner public {
         genesisAdded = true; // Forever lock this.
     }
 
-    function addMasternode(address _candidate) public {
+    function addMasternode(address _candidate) internal {
 
         /**
          * @dev userByAddress is used for general statistic data.
@@ -240,17 +260,17 @@ contract CaelumMasternodeImproved is CaelumModifier {
         userCounter++;
     }
 
-    function updateMasternode(uint _index) public returns(bool) {
+    function updateMasternode(uint _index) internal returns(bool) {
         masternodeByIndex[_index].startingRound++;
         return true;
     }
 
-    function updateMasternodeAsTeamMember(address _candidate) public returns(bool) {
+    function updateMasternodeAsTeamMember(address _candidate) internal returns(bool) {
         userByAddress[_candidate].isTeamMember = true;
         return (true);
     }
 
-    function deleteMasternode(uint _index) public {
+    function deleteMasternode(uint _index) internal {
         address getUserFrom = getUserFromID(_index);
         userByAddress[getUserFrom].isActive = false;
         masternodeByIndex[_index].isActive = false;
@@ -280,7 +300,7 @@ contract CaelumMasternodeImproved is CaelumModifier {
         return lastFound;
     }
 
-    function setMasternodeCandidate() public returns(address) {
+    function setMasternodeCandidate() internal returns(address) {
 
         uint hardlimitCounter = 0;
 
@@ -336,7 +356,7 @@ contract CaelumMasternodeImproved is CaelumModifier {
         return (0);
     }
 
-    function calculateRewardStructures() public {
+    function calculateRewardStructures() internal {
         //ToDo: Set
         uint _global_reward_amount = getMiningReward();
         uint getStageOfMining = miningEpoch / MINING_PHASE_DURATION_BLOCKS * 10;
@@ -364,7 +384,7 @@ contract CaelumMasternodeImproved is CaelumModifier {
         rewardsProofOfWork = _pow;
     }
 
-    function _arrangeMasternodeFlow() public {
+    function _arrangeMasternodeFlow() internal {
         calculateRewardStructures();
         setMasternodeCandidate();
         miningEpoch++;
@@ -407,8 +427,6 @@ contract CaelumMasternodeImproved is CaelumModifier {
             );
         }
 
-    address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
-
     function contractProgress() public view returns
         (
             uint epoch,
@@ -432,9 +450,9 @@ contract CaelumMasternodeImproved is CaelumModifier {
             );
         }
 
-    function getDataFromContract() public returns(uint) {
+    function getDataFromContract() onlyOwner public returns(uint) {
 
-        CaelumMasternodeImproved prev = CaelumMasternodeImproved(cloneDataFrom);
+        CaelumAbstractMasternode prev = CaelumAbstractMasternode(cloneDataFrom);
         (uint epoch,
             uint candidate,
             uint round,
@@ -455,7 +473,7 @@ contract CaelumMasternodeImproved is CaelumModifier {
 
 // File: contracts\CaelumMasternode.sol
 
-contract CaelumMasternode is CaelumMasternodeImproved {
+contract CaelumMasternode is CaelumAbstractMasternode {
 
     bool minerSet = false;
     bool tokenSet = false;
@@ -464,21 +482,21 @@ contract CaelumMasternode is CaelumMasternodeImproved {
      * @dev Use this to externaly call the _arrangeMasternodeFlow function. ALWAYS set a modifier !
      */
 
-    function _externalArrangeFlow() public {
+    function _externalArrangeFlow() onlyMiningContract public {
         _arrangeMasternodeFlow();
     }
 
     /**
      * @dev Use this to externaly call the addMasternode function. ALWAYS set a modifier !
      */
-    function _externalAddMasternode(address _received) external {
+    function _externalAddMasternode(address _received) onlyTokenContract external {
         addMasternode(_received);
     }
 
     /**
      * @dev Use this to externaly call the deleteMasternode function. ALWAYS set a modifier !
      */
-    function _externalStopMasternode(address _received) external {
+    function _externalStopMasternode(address _received) onlyTokenContract external {
         deleteMasternode(getLastPerUser(_received));
     }
 

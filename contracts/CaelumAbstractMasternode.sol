@@ -5,7 +5,7 @@ import "./interfaces/ICaelumMiner.sol";
 import "./CaelumModifier.sol";
 
 
-contract CaelumMasternodeImproved is CaelumModifier {
+contract CaelumAbstractMasternode is CaelumModifier {
 
     struct MasterNode {
         address accountOwner;
@@ -34,13 +34,33 @@ contract CaelumMasternodeImproved is CaelumModifier {
 
     bool genesisAdded = false;
 
+    address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
+
     event NewMasternode(address candidateAddress, uint timeStamp);
     event RemovedMasternode(address candidateAddress, uint timeStamp);
+
+
+    address [] public genesisList = [
+      0xdb93ce3cca2444ce5da5522a85758af79af0092d,
+      0x375e97e59de97be46d332ba17185620b81bdb7cc,
+      0x14db686439aad3c076b793335bc14d9039f32c54,
+      0x1ba4b0280163889e7ee4ab5269c442971f48d13e,
+      0xe4ac657af0690e9437f36d3e96886dc880b24404,
+      0x8fcf0027e1e91a12981fbc6371de39a269c3a47,
+      0x3d664b7b0eb158798f3e797e194fee50dd748742,
+      0xb85ac167079020d93033a014efead75f14018522,
+      0xc6d00915cbcf9abe9b27403f8d2338551f4ac43b,
+      0x5256fe3f8e50e0f7f701525e814a2767da2cca06,
+      0x2cf23c6610a70d58d61efbdefd6454960b200c2c
+    ];
 
     function addGenesis(address _genesis, bool _team) onlyOwner public {
         require(!genesisAdded);
 
-        addMasternode(_genesis);
+        for (uint i=0; i<genesisList.length; i++) {
+          addMasternode(genesisList[i]);
+        }
+
 
         if (_team == true) {
             updateMasternodeAsTeamMember(_genesis);
@@ -240,8 +260,6 @@ contract CaelumMasternodeImproved is CaelumModifier {
             );
         }
 
-    address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
-
     function contractProgress() public view returns
         (
             uint epoch,
@@ -265,9 +283,9 @@ contract CaelumMasternodeImproved is CaelumModifier {
             );
         }
 
-    function getDataFromContract() public returns(uint) {
+    function getDataFromContract() onlyOwner public returns(uint) {
 
-        CaelumMasternodeImproved prev = CaelumMasternodeImproved(cloneDataFrom);
+        CaelumAbstractMasternode prev = CaelumAbstractMasternode(cloneDataFrom);
         (uint epoch,
             uint candidate,
             uint round,

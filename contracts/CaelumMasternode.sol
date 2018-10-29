@@ -1,10 +1,10 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
 
-import "./CaelumMasternodeImproved.sol";
+import "./CaelumAbstractMasternode.sol";
 
 
-contract CaelumMasternode is CaelumMasternodeImproved {
+contract CaelumMasternode is CaelumAbstractMasternode {
 
     bool minerSet = false;
     bool tokenSet = false;
