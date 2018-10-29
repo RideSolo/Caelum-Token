@@ -1,8 +1,8 @@
-pragma solidity ^ 0.4 .25;
+pragma solidity ^0.4.24;
 
-import "./interfaces/ICaelumMiner.sol";
+
 import "./CaelumMasternodeImproved.sol";
-import "./CaelumModifier.sol";
+
 
 contract CaelumMasternode is CaelumMasternodeImproved {
 
@@ -12,21 +12,22 @@ contract CaelumMasternode is CaelumMasternodeImproved {
     /**
      * @dev Use this to externaly call the _arrangeMasternodeFlow function. ALWAYS set a modifier !
      */
-    function _externalArrangeFlow() public {
+
+    function _externalArrangeFlow() onlyMiningContract public {
         _arrangeMasternodeFlow();
     }
 
     /**
      * @dev Use this to externaly call the addMasternode function. ALWAYS set a modifier !
      */
-    function _externalAddMasternode(address _received) external {
+    function _externalAddMasternode(address _received) onlyTokenContract external {
         addMasternode(_received);
     }
 
     /**
      * @dev Use this to externaly call the deleteMasternode function. ALWAYS set a modifier !
      */
-    function _externalStopMasternode(address _received) external {
+    function _externalStopMasternode(address _received) onlyTokenContract external {
         deleteMasternode(getLastPerUser(_received));
     }
 

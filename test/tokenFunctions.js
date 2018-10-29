@@ -23,6 +23,7 @@ contract('CaelumToken main functions', function(accounts) {
   });
 
   it('Execute collateral deposit for deposit/withdraw test', async function() {
+    await mainToken.setMasternodeContract(clmMASTERNODE.address);
     await mainToken.setDataStorage(clmMASTERNODE.address);
     await mainToken.setMiningContract(clmMASTERNODE.address);
     await mainToken.addOwnToken();

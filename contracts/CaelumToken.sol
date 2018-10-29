@@ -1,11 +1,11 @@
-pragma solidity ^ 0.4 .25;
+pragma solidity ^0.4.25;
 
 import "./CaelumAcceptERC20.sol";
 import "./libs/StandardToken.sol";
 import "./CaelumModifier.sol";
 
 
-contract CaelumToken is CaelumModifier, CaelumAcceptERC20, StandardToken {
+contract CaelumToken is CaelumAcceptERC20, StandardToken {
     using SafeMath
     for uint;
 
@@ -84,8 +84,6 @@ contract CaelumToken is CaelumModifier, CaelumAcceptERC20, StandardToken {
             manualSwaps[msg.sender] = amountToUpgrade;
         }
     }
-
-
 
     /**
      * @dev Due to some bugs in the previous contracts, a handfull of users will

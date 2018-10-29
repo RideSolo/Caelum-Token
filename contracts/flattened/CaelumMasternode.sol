@@ -1,9 +1,176 @@
 pragma solidity ^0.4.25;
 
-import "./libs/SafeMath.sol";
-import "./interfaces/ICaelumMiner.sol";
-import "./CaelumModifier.sol";
+// File: contracts\libs\SafeMath.sol
 
+//solium-disable linebreak-style
+pragma solidity ^0.4.25;
+
+library SafeMath {
+
+    /**
+     * @dev Multiplies two numbers, reverts on overflow.
+     */
+    function mul(uint256 _a, uint256 _b) internal pure returns(uint256) {
+        // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
+        // benefit is lost if 'b' is also tested.
+        // See: https://github.com/OpenZeppelin/openzeppelin-solidity/pull/522
+        if (_a == 0) {
+            return 0;
+        }
+
+        uint256 c = _a * _b;
+        require(c / _a == _b);
+
+        return c;
+    }
+
+    /**
+     * @dev Integer division of two numbers truncating the quotient, reverts on division by zero.
+     */
+    function div(uint256 _a, uint256 _b) internal pure returns(uint256) {
+        require(_b > 0); // Solidity only automatically asserts when dividing by 0
+        uint256 c = _a / _b;
+        // assert(_a == _b * c + _a % _b); // There is no case in which this doesn't hold
+
+        return c;
+    }
+
+    /**
+     * @dev Subtracts two numbers, reverts on overflow (i.e. if subtrahend is greater than minuend).
+     */
+    function sub(uint256 _a, uint256 _b) internal pure returns(uint256) {
+        require(_b <= _a);
+        uint256 c = _a - _b;
+
+        return c;
+    }
+
+    /**
+     * @dev Adds two numbers, reverts on overflow.
+     */
+    function add(uint256 _a, uint256 _b) internal pure returns(uint256) {
+        uint256 c = _a + _b;
+        require(c >= _a);
+
+        return c;
+    }
+
+    /**
+     * @dev Divides two numbers and returns the remainder (unsigned integer modulo),
+     * reverts when dividing by zero.
+     */
+    function mod(uint256 a, uint256 b) internal pure returns(uint256) {
+        require(b != 0);
+        return a % b;
+    }
+}
+
+// File: contracts\interfaces\ICaelumMiner.sol
+
+interface ICaelumMiner {
+    function getMiningReward() external returns (uint) ;
+}
+
+// File: contracts\libs\Ownable.sol
+
+//solium-disable linebreak-style
+pragma solidity ^0.4.25;
+
+contract Ownable {
+  address public owner;
+
+
+  event OwnershipRenounced(address indexed previousOwner);
+  event OwnershipTransferred(
+    address indexed previousOwner,
+    address indexed newOwner
+  );
+
+
+  /**
+   * @dev The Ownable constructor sets the original `owner` of the contract to the sender
+   * account.
+   */
+  constructor() public {
+    owner = msg.sender;
+  }
+
+  /**
+   * @dev Throws if called by any account other than the owner.
+   */
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
+
+  /**
+   * @dev Allows the current owner to relinquish control of the contract.
+   * @dev Renouncing to ownership will leave the contract without an owner.
+   * It will not be possible to call the functions with the `onlyOwner`
+   * modifier anymore.
+   */
+  function renounceOwnership() public onlyOwner {
+    emit OwnershipRenounced(owner);
+    owner = address(0);
+  }
+
+  /**
+   * @dev Allows the current owner to transfer control of the contract to a newOwner.
+   * @param _newOwner The address to transfer ownership to.
+   */
+  function transferOwnership(address _newOwner) public onlyOwner {
+    _transferOwnership(_newOwner);
+  }
+
+  /**
+   * @dev Transfers control of the contract to a newOwner.
+   * @param _newOwner The address to transfer ownership to.
+   */
+  function _transferOwnership(address _newOwner) internal {
+    require(_newOwner != address(0));
+    emit OwnershipTransferred(owner, _newOwner);
+    owner = _newOwner;
+  }
+}
+
+// File: contracts\CaelumModifier.sol
+
+contract CaelumModifier is Ownable {
+
+    address public _contract_miner;
+    address public _contract_token;
+    address public _contract_masternode;
+
+    modifier onlyMiningContract() {
+        require(msg.sender == _contract_miner);
+        _;
+    }
+
+    modifier onlyTokenContract() {
+        require(msg.sender == _contract_token);
+        _;
+    }
+
+    modifier onlyMasternodeContract() {
+        require(msg.sender == _contract_masternode);
+        _;
+    }
+
+    function setMiningContract(address _contract) onlyOwner public {
+        _contract_miner = _contract;
+    }
+
+    function setTokenContract(address _contract) onlyOwner public {
+        _contract_token = _contract;
+    }
+
+    function setMasternodeContract(address _contract) onlyOwner public {
+        _contract_masternode = _contract;
+    }
+
+}
+
+// File: contracts\CaelumMasternodeImproved.sol
 
 contract CaelumMasternodeImproved is CaelumModifier {
 
@@ -37,7 +204,7 @@ contract CaelumMasternodeImproved is CaelumModifier {
     event NewMasternode(address candidateAddress, uint timeStamp);
     event RemovedMasternode(address candidateAddress, uint timeStamp);
 
-    function addGenesis(address _genesis, bool _team) onlyOwner public {
+    function addGenesis(address _genesis, bool _team) public {
         require(!genesisAdded);
 
         addMasternode(_genesis);
@@ -47,11 +214,11 @@ contract CaelumMasternodeImproved is CaelumModifier {
         }
     }
 
-    function closeGenesis() onlyOwner public {
+    function closeGenesis() public {
         genesisAdded = true; // Forever lock this.
     }
 
-    function addMasternode(address _candidate) internal {
+    function addMasternode(address _candidate) public {
 
         /**
          * @dev userByAddress is used for general statistic data.
@@ -73,17 +240,17 @@ contract CaelumMasternodeImproved is CaelumModifier {
         userCounter++;
     }
 
-    function updateMasternode(uint _index) internal returns(bool) {
+    function updateMasternode(uint _index) public returns(bool) {
         masternodeByIndex[_index].startingRound++;
         return true;
     }
 
-    function updateMasternodeAsTeamMember(address _candidate) internal returns(bool) {
+    function updateMasternodeAsTeamMember(address _candidate) public returns(bool) {
         userByAddress[_candidate].isTeamMember = true;
         return (true);
     }
 
-    function deleteMasternode(uint _index) internal {
+    function deleteMasternode(uint _index) public {
         address getUserFrom = getUserFromID(_index);
         userByAddress[getUserFrom].isActive = false;
         masternodeByIndex[_index].isActive = false;
@@ -113,7 +280,7 @@ contract CaelumMasternodeImproved is CaelumModifier {
         return lastFound;
     }
 
-    function setMasternodeCandidate() internal returns(address) {
+    function setMasternodeCandidate() public returns(address) {
 
         uint hardlimitCounter = 0;
 
@@ -169,7 +336,7 @@ contract CaelumMasternodeImproved is CaelumModifier {
         return (0);
     }
 
-    function calculateRewardStructures() internal {
+    function calculateRewardStructures() public {
         //ToDo: Set
         uint _global_reward_amount = getMiningReward();
         uint getStageOfMining = miningEpoch / MINING_PHASE_DURATION_BLOCKS * 10;
@@ -197,7 +364,7 @@ contract CaelumMasternodeImproved is CaelumModifier {
         rewardsProofOfWork = _pow;
     }
 
-    function _arrangeMasternodeFlow() internal {
+    function _arrangeMasternodeFlow() public {
         calculateRewardStructures();
         setMasternodeCandidate();
         miningEpoch++;
@@ -284,4 +451,61 @@ contract CaelumMasternodeImproved is CaelumModifier {
         rewardsMasternode = masternodereward;
 
     }
+}
+
+// File: contracts\CaelumMasternode.sol
+
+contract CaelumMasternode is CaelumMasternodeImproved {
+
+    bool minerSet = false;
+    bool tokenSet = false;
+
+    /**
+     * @dev Use this to externaly call the _arrangeMasternodeFlow function. ALWAYS set a modifier !
+     */
+
+    function _externalArrangeFlow() public {
+        _arrangeMasternodeFlow();
+    }
+
+    /**
+     * @dev Use this to externaly call the addMasternode function. ALWAYS set a modifier !
+     */
+    function _externalAddMasternode(address _received) external {
+        addMasternode(_received);
+    }
+
+    /**
+     * @dev Use this to externaly call the deleteMasternode function. ALWAYS set a modifier !
+     */
+    function _externalStopMasternode(address _received) external {
+        deleteMasternode(getLastPerUser(_received));
+    }
+
+    function getMiningReward() public view returns(uint) {
+        return ICaelumMiner(_contract_miner).getMiningReward();
+    }
+
+    address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
+
+    function getDataFromContract() onlyOwner public returns(uint) {
+
+        CaelumMasternode prev = CaelumMasternode(cloneDataFrom);
+        (uint epoch,
+            uint candidate,
+            uint round,
+            uint miningepoch,
+            uint globalreward,
+            uint powreward,
+            uint masternodereward,
+            uint usercounter) = prev.contractProgress();
+
+        //masternodeEpoch = epoch;
+        masternodeRound = round;
+        miningEpoch = miningepoch;
+        rewardsProofOfWork = powreward;
+        rewardsMasternode = masternodereward;
+
+    }
+
 }

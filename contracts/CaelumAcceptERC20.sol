@@ -1,4 +1,4 @@
-pragma solidity ^ 0.4 .25;
+pragma solidity ^0.4.25;
 
 import "./libs/SafeMath.sol";
 import "./CaelumModifier.sol";
@@ -6,7 +6,7 @@ import "./libs/StandardToken.sol";
 import "./interfaces/IRemoteFunctions.sol";
 import "./interfaces/ERC20Interface.sol";
 
-contract CaelumAcceptERC20 is Ownable {
+contract CaelumAcceptERC20 is CaelumModifier {
     using SafeMath
     for uint;
 
