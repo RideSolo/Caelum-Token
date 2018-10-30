@@ -20,11 +20,10 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
     uint256 public totalSupply = 2100000000000000;
 
 
-    address public allowedSwapAddress01;
-    address public allowedSwapAddress02;
+    address public allowedSwapAddress01 = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
+    address public allowedSwapAddress02 = 0x16da16948e5092a3d2aa71aca7b57b8a9cfd8ddb;
 
     uint swapStartedBlock;
-
 
     mapping(address => uint) manualSwaps;
     mapping(address => bool) hasSwapped;
@@ -32,12 +31,6 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
 
     constructor() public {
         swapStartedBlock = now;
-    }
-
-    // TESTNET: REMOVE BEFORE LIVE !!!
-    // MUST BE HARDCODED.
-    function setSwap(address _t) public {
-        allowedSwapAddress01 = _t;
     }
 
     /**
@@ -89,10 +82,9 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * @dev Due to some bugs in the previous contracts, a handfull of users will
      * be unable to fully withdraw their masternodes. Owner can replace those tokens
      * who are forever locked up in the old contract with new ones.
-
      */
     function getLockedTokens(address _holder) public view returns(uint) {
-        return CaelumAcceptERC20(this).tokens(this, _holder);
+        return CaelumAcceptERC20(allowedSwapAddress01).tokens(allowedSwapAddress01, _holder);
     }
     /**
      * @dev Approve a request for manual token swaps
@@ -131,8 +123,8 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * @param _receiver Who receives the mining reward.
      * @param _amount What amount to reward.
      */
-    function rewardExternal(address _receiver, uint _amount) onlyMiningContract external {
+    function rewardExternal(address _receiver, uint _amount) onlyMiningContract public {
         balances[_receiver] = balances[_receiver].add(_amount);
         emit Transfer(this, _receiver, _amount);
     }
-}
+} 
