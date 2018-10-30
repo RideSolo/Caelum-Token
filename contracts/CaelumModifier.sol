@@ -9,17 +9,17 @@ contract CaelumModifier is Ownable {
     address public _contract_masternode;
 
     modifier onlyMiningContract() {
-        require(msg.sender == _contract_miner);
+        require(msg.sender == _contract_miner, "Wrong sender");
         _;
     }
 
     modifier onlyTokenContract() {
-        require(msg.sender == _contract_token);
+        require(msg.sender == _contract_token, "Wrong sender");
         _;
     }
 
     modifier onlyMasternodeContract() {
-        require(msg.sender == _contract_masternode);
+        require(msg.sender == _contract_masternode, "Wrong sender");
         _;
     }
 

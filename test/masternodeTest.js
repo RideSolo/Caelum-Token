@@ -24,8 +24,8 @@ contract('CaelumMasternode main functions', function(accounts) {
   });
 
   it('Execute preparation for depositing tokens', async function() {
+    await clmMASTERNODE.setTokenContract(mainToken.address);
     await mainToken.setMasternodeContract(clmMASTERNODE.address);
-    await mainToken.setDataStorage(clmMASTERNODE.address);
     await mainToken.setMiningContract(clmMASTERNODE.address);
     await mainToken.addOwnToken();
   });

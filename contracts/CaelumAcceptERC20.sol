@@ -5,12 +5,12 @@ import "./CaelumModifier.sol";
 import "./libs/StandardToken.sol";
 import "./interfaces/IRemoteFunctions.sol";
 import "./interfaces/ERC20Interface.sol";
+import "./CaelumVotings.sol";
 
-contract CaelumAcceptERC20 is CaelumModifier {
+contract CaelumAcceptERC20 is CaelumModifier, CaelumVotings {
     using SafeMath
     for uint;
 
-    IRemoteFunctions public DataVault;
 
     address[] public tokensList;
     bool setOwnContract = true;
@@ -111,6 +111,7 @@ contract CaelumAcceptERC20 is CaelumModifier {
      * @param amount Amount to deposit
      */
     function depositCollateral(address token, uint amount) public {
+
         require(isAcceptedToken(token), "ERC20 not authorised"); // Should be a token from our list
         require(amount == getAcceptedTokenAmount(token)); // The amount needs to match our set amount
         require(isValid(token)); // It should be called within the setup timeframe
@@ -120,9 +121,8 @@ contract CaelumAcceptERC20 is CaelumModifier {
         require(StandardToken(token).transferFrom(msg.sender, this, amount), "error with token");
         emit Deposit(token, msg.sender, amount, tokens[token][msg.sender]);
 
-        DataVault._externalAddMasternode(msg.sender);
+        IRemoteFunctions(_contract_masternode)._externalAddMasternode(msg.sender);
     }
-
 
     /**
      * @notice Public function that allows any user to withdraw deposited tokens and stop as masternode
@@ -138,13 +138,10 @@ contract CaelumAcceptERC20 is CaelumModifier {
         uint amountToWithdraw = tokens[token][msg.sender];
         tokens[token][msg.sender] = 0;
 
-        DataVault._externalStopMasternode(msg.sender);
+        IRemoteFunctions(_contract_masternode)._externalStopMasternode(msg.sender);
 
         if (!StandardToken(token).transfer(msg.sender, amountToWithdraw)) revert("error msg");
         emit Withdraw(token, msg.sender, amountToWithdraw, amountToWithdraw);
     }
 
-    function setDataStorage(address _masternodeContract) onlyOwner public {
-        DataVault = IRemoteFunctions(_masternodeContract);
-    }
 }
