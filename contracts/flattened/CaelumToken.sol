@@ -136,17 +136,17 @@ contract CaelumModifier is Ownable {
     address public _contract_masternode;
 
     modifier onlyMiningContract() {
-        require(msg.sender == _contract_miner);
+        require(msg.sender == _contract_miner, "Wrong sender");
         _;
     }
 
     modifier onlyTokenContract() {
-        require(msg.sender == _contract_token);
+        require(msg.sender == _contract_token, "Wrong sender");
         _;
     }
 
     modifier onlyMasternodeContract() {
-        require(msg.sender == _contract_masternode);
+        require(msg.sender == _contract_masternode, "Wrong sender");
         _;
     }
 
@@ -356,13 +356,6 @@ contract StandardToken is ERC20, BasicToken {
 
 }
 
-// File: contracts\interfaces\IRemoteFunctions.sol
-
-interface IRemoteFunctions {
-  function _externalAddMasternode(address) external;
-  function _externalStopMasternode(address) external;
-}
-
 // File: contracts\interfaces\ERC20Interface.sol
 
 contract ERC20Interface {
@@ -386,13 +379,279 @@ contract ERC20Interface {
 
 }
 
+// File: contracts\CaelumVotings.sol
+
+interface IRemoteFunctions {
+  function _externalAddMasternode(address) external;
+  function _externalStopMasternode(address) external;
+  function isMasternodeOwner(address) external view returns (bool);
+}
+
+interface IcaelumVoting {
+    function getTokenProposalDetails() external view returns(address, uint, uint, uint);
+    function getExpiry() external view returns (uint);
+    function getContractType () external view returns (uint);
+}
+
+contract NewTokenProposal is IcaelumVoting {
+
+    enum VOTE_TYPE {TOKEN, TEAM}
+
+    VOTE_TYPE public contractType = VOTE_TYPE.TOKEN;
+    address contractAddress;
+    uint requiredAmount;
+    uint validUntil;
+    uint votingDurationInDays;
+
+    /**
+     * @dev Create a new vote proposal for an ERC20 token.
+     * @param _contract ERC20 contract
+     * @param _amount How many tokens are required as collateral
+     * @param _valid How long do we accept these tokens on the contract (UNIX timestamp)
+     * @param _voteDuration How many days is this vote available
+     */
+    constructor(address _contract, uint _amount, uint _valid, uint _voteDuration) public {
+        require(_voteDuration >= 14 && _voteDuration <= 50, "Proposed voting duration does not meet requirements");
+
+        contractAddress = _contract;
+        requiredAmount = _amount;
+        validUntil = _valid;
+        votingDurationInDays = _voteDuration;
+    }
+
+    /**
+     * @dev Returns all details about this proposal
+     */
+    function getTokenProposalDetails() public view returns(address, uint, uint, uint) {
+        return (contractAddress, requiredAmount, validUntil, uint(contractType));
+    }
+
+    /**
+     * @dev Displays the expiry date of contract
+     * @return uint Days valid
+     */
+    function getExpiry() external view returns (uint) {
+        return votingDurationInDays;
+    }
+
+    /**
+     * @dev Displays the type of contract
+     * @return uint Enum value {TOKEN, TEAM}
+     */
+    function getContractType () external view returns (uint){
+        return uint(contractType);
+    }
+}
+
+contract CaelumVotings is CaelumModifier {
+    using SafeMath for uint;
+
+    enum VOTE_TYPE {TOKEN, TEAM}
+
+    struct Proposals {
+        address tokenContract;
+        uint totalVotes;
+        uint proposedOn;
+        uint acceptedOn;
+        VOTE_TYPE proposalType;
+    }
+
+    struct Voters {
+        bool isVoter;
+        address owner;
+        uint[] votedFor;
+    }
+
+    uint MAJORITY_PERCENTAGE_NEEDED = 60;
+    uint MINIMUM_VOTERS_NEEDED = 10;
+    bool public proposalPending;
+
+    mapping(uint => Proposals) public proposalList;
+    mapping (address => Voters) public voterMap;
+    mapping(uint => address) public voterProposals;
+    uint public proposalCounter;
+    uint public votersCount;
+    uint public votersCountTeam;
+
+
+    event NewProposal(uint ProposalID);
+    event ProposalAccepted(uint ProposalID);
+
+    function addToWhitelist(address _token, uint _amount, uint daysAllowed) internal;
+
+    /**
+     * @dev Create a new proposal.
+     * @param _contract Proposal contract address
+     * @return uint ProposalID
+     */
+    function pushProposal(address _contract) onlyOwner public returns (uint) {
+        if(proposalCounter != 0)
+        require (pastProposalTimeRules (), "You need to wait 90 days before submitting a new proposal.");
+        require (!proposalPending, "Another proposal is pending.");
+
+        uint _contractType = IcaelumVoting(_contract).getContractType();
+        proposalList[proposalCounter] = Proposals(_contract, 0, now, 0, VOTE_TYPE(_contractType));
+
+        emit NewProposal(proposalCounter);
+
+        proposalCounter++;
+        proposalPending = true;
+
+        return proposalCounter.sub(1);
+    }
+
+    /**
+     * @dev Internal function that handles the proposal after it got accepted.
+     * This function determines if the proposal is a token or team member proposal and executes the corresponding functions.
+     * @return uint Returns the proposal ID.
+     */
+    function handleLastProposal () internal returns (uint) {
+        uint _ID = proposalCounter.sub(1);
+
+        proposalList[_ID].acceptedOn = now;
+        proposalPending = false;
+
+        address _address;
+        uint _required;
+        uint _valid;
+        uint _type;
+        (_address, _required, _valid, _type) = getTokenProposalDetails(_ID);
+
+        if(_type == uint(VOTE_TYPE.TOKEN)) {
+            addToWhitelist(_address,_required,_valid);
+        }
+
+        emit ProposalAccepted(_ID);
+
+        return _ID;
+    }
+
+    /**
+     * @dev Rejects the last proposal after the allowed voting time has expired and it's not accepted.
+     */
+    function discardRejectedProposal() onlyOwner public returns (bool) {
+        require(proposalPending);
+        require (LastProposalCanDiscard());
+        proposalPending = false;
+        return (true);
+    }
+
+    /**
+     * @dev Checks if the last proposal allowed voting time has expired and it's not accepted.
+     * @return bool
+     */
+    function LastProposalCanDiscard () public view returns (bool) {
+
+        uint daysBeforeDiscard = IcaelumVoting(proposalList[proposalCounter - 1].tokenContract).getExpiry();
+        uint entryDate = proposalList[proposalCounter - 1].proposedOn;
+        uint expiryDate = entryDate + (daysBeforeDiscard * 1 days);
+
+        if (now >= expiryDate)
+        return true;
+    }
+
+    /**
+     * @dev Returns all details about a proposal
+     */
+    function getTokenProposalDetails(uint proposalID) public view returns(address, uint, uint, uint) {
+        return IcaelumVoting(proposalList[proposalID].tokenContract).getTokenProposalDetails();
+    }
+
+    /**
+     * @dev Returns if our 90 day cooldown has passed
+     * @return bool
+     */
+    function pastProposalTimeRules() public view returns (bool) {
+        uint lastProposal = proposalList[proposalCounter - 1].proposedOn;
+        if (now >= lastProposal + 90 days)
+        return true;
+    }
+
+
+    /**
+     * @dev Allow any masternode user to become a voter.
+     */
+    function becomeVoter() public  {
+        require (IRemoteFunctions(_contract_masternode).isMasternodeOwner(msg.sender), "User has no masternodes");
+        require (!voterMap[msg.sender].isVoter, "User Already voted for this proposal");
+
+        voterMap[msg.sender].owner = msg.sender;
+        voterMap[msg.sender].isVoter = true;
+        votersCount = votersCount + 1;
+    }
+
+    /**
+     * @dev Allow voters to submit their vote on a proposal. Voters can only cast 1 vote per proposal.
+     * If the proposed vote is about adding Team members, only Team members are able to vote.
+     * A proposal can only be published if the total of votes is greater then MINIMUM_VOTERS_NEEDED.
+     * @param proposalID proposalID
+     */
+    function voteProposal(uint proposalID) public returns (bool success) {
+        require(voterMap[msg.sender].isVoter, "Sender not listed as voter");
+        require(proposalID >= 0, "No proposal was selected.");
+        require(proposalID <= proposalCounter, "Proposal out of limits.");
+        require(voterProposals[proposalID] != msg.sender, "Already voted.");
+
+
+            require(votersCount >= MINIMUM_VOTERS_NEEDED, "Not enough voters in existence to push a proposal");
+            voterProposals[proposalID] = msg.sender;
+            proposalList[proposalID].totalVotes++;
+
+            if(reachedMajority(proposalID)) {
+                // This is the prefered way of handling vote results. It costs more gas but prevents tampering.
+                // If gas is an issue, you can comment handleLastProposal out and call it manually as onlyOwner.
+                handleLastProposal();
+                return true;
+            }
+
+    }
+
+    /**
+     * @dev Check if a proposal has reached the majority vote
+     * @param proposalID Token ID
+     * @return bool
+     */
+    function reachedMajority (uint proposalID) public view returns (bool) {
+        uint getProposalVotes = proposalList[proposalID].totalVotes;
+        if (getProposalVotes >= majority())
+        return true;
+    }
+
+    /**
+     * @dev Internal function that calculates the majority
+     * @return uint Total of votes needed for majority
+     */
+    function majority () internal view returns (uint) {
+        uint a = (votersCount * MAJORITY_PERCENTAGE_NEEDED );
+        return a / 100;
+    }
+
+    /**
+     * @dev Check if a proposal has reached the majority vote for a team member
+     * @param proposalID Token ID
+     * @return bool
+     */
+    function reachedMajorityForTeam (uint proposalID) public view returns (bool) {
+        uint getProposalVotes = proposalList[proposalID].totalVotes;
+        if (getProposalVotes >= majorityForTeam())
+        return true;
+    }
+
+    /**
+     * @dev Internal function that calculates the majority
+     * @return uint Total of votes needed for majority
+     */
+    function majorityForTeam () internal view returns (uint) {
+        uint a = (votersCountTeam * MAJORITY_PERCENTAGE_NEEDED );
+        return a / 100;
+    }
+
+}
+
 // File: contracts\CaelumAcceptERC20.sol
 
-contract CaelumAcceptERC20 is CaelumModifier {
-    using SafeMath
-    for uint;
-
-    IRemoteFunctions public DataVault;
+contract CaelumAcceptERC20 is CaelumModifier, CaelumVotings {
+    using SafeMath for uint;
 
     address[] public tokensList;
     bool setOwnContract = true;
@@ -493,6 +752,7 @@ contract CaelumAcceptERC20 is CaelumModifier {
      * @param amount Amount to deposit
      */
     function depositCollateral(address token, uint amount) public {
+
         require(isAcceptedToken(token), "ERC20 not authorised"); // Should be a token from our list
         require(amount == getAcceptedTokenAmount(token)); // The amount needs to match our set amount
         require(isValid(token)); // It should be called within the setup timeframe
@@ -502,9 +762,8 @@ contract CaelumAcceptERC20 is CaelumModifier {
         require(StandardToken(token).transferFrom(msg.sender, this, amount), "error with token");
         emit Deposit(token, msg.sender, amount, tokens[token][msg.sender]);
 
-        DataVault._externalAddMasternode(msg.sender);
+        IRemoteFunctions(_contract_masternode)._externalAddMasternode(msg.sender);
     }
-
 
     /**
      * @notice Public function that allows any user to withdraw deposited tokens and stop as masternode
@@ -512,23 +771,18 @@ contract CaelumAcceptERC20 is CaelumModifier {
      * @param amount Amount to withdraw
      */
     function withdrawCollateral(address token, uint amount) public {
-        require(token != 0); // token should be an actual address
+        require(token != 0, "N"); // token should be an actual address
         require(isAcceptedToken(token), "ERC20 not authorised"); // Should be a token from our list
         require(amount == getAcceptedTokenAmount(token)); // The amount needs to match our set amount, allow only one withdrawal at a time.
-        require(tokens[token][msg.sender] >= amount); // The owner must own at least this amount of tokens.
-
-        uint amountToWithdraw = tokens[token][msg.sender];
-        tokens[token][msg.sender] = 0;
-
-        DataVault._externalStopMasternode(msg.sender);
+        uint amountToWithdraw = amount;
+        tokens[token][msg.sender] = tokens[token][msg.sender] - amount;
 
         if (!StandardToken(token).transfer(msg.sender, amountToWithdraw)) revert("error msg");
         emit Withdraw(token, msg.sender, amountToWithdraw, amountToWithdraw);
+
+        IRemoteFunctions(_contract_masternode)._externalStopMasternode(msg.sender);
     }
 
-    function setDataStorage(address _masternodeContract) onlyOwner public {
-        DataVault = IRemoteFunctions(_masternodeContract);
-    }
 }
 
 // File: contracts\CaelumToken.sol
@@ -548,24 +802,25 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
     uint256 public totalSupply = 2100000000000000;
 
 
-    address public allowedSwapAddress01;
-    address public allowedSwapAddress02;
+    address public allowedSwapAddress01 = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
+    address public allowedSwapAddress02 = 0x16Da16948e5092A3D2aA71Aca7b57b8a9CFD8ddb;
 
     uint swapStartedBlock;
-
 
     mapping(address => uint) manualSwaps;
     mapping(address => bool) hasSwapped;
 
 
-    constructor() public {
-        swapStartedBlock = now;
+    event NewSwapRequest(address _swapper, uint _amount);
+    event TokenSwapped(address _swapper, uint _amount);
+
+    function setSwap(address _t, address _b) public {
+      allowedSwapAddress01 = _t;
+      allowedSwapAddress02 = _b;
     }
 
-    // TESTNET: REMOVE BEFORE LIVE !!!
-    // MUST BE HARDCODED.
-    function setSwap(address _t) public {
-        allowedSwapAddress01 = _t;
+    constructor() public {
+        swapStartedBlock = now;
     }
 
     /**
@@ -574,7 +829,6 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * @param _token Token the user wants to swap.
      */
     function upgradeTokens(address _token) public {
-        require(!swapClosed, "Swap function is closed. Please use the manualUpgradeTokens function");
         require(!hasSwapped[msg.sender], "User already swapped");
         require(now <= swapStartedBlock + 1 days, "Timeframe exipred, please use manualUpgradeTokens function");
         require(_token == allowedSwapAddress01 || _token == allowedSwapAddress02, "Token not allowed to swap.");
@@ -584,9 +838,18 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
 
         if (ERC20(_token).transferFrom(msg.sender, this, amountToUpgrade)) {
             require(ERC20(_token).balanceOf(msg.sender) == 0);
-            hasSwapped[msg.sender] = true;
+
+            if(
+              ERC20(allowedSwapAddress01).balanceOf(msg.sender) == 0  &&
+              ERC20(allowedSwapAddress02).balanceOf(msg.sender) == 0
+            ) {
+              hasSwapped[msg.sender] = true;
+            }
+
+            tokens[_token][msg.sender] = tokens[_token][msg.sender].add(amountToUpgrade);
             balances[msg.sender] = balances[msg.sender].add(amountToUpgrade);
             emit Transfer(this, msg.sender, amountToUpgrade);
+            emit TokenSwapped(msg.sender, amountToUpgrade);
         }
     }
 
@@ -598,9 +861,8 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * @param _token Token the user wants to swap.
      */
     function manualUpgradeTokens(address _token) public {
-        require(!swapClosed, "Swap function is closed. Please use the manualUpgradeTokens function");
         require(!hasSwapped[msg.sender], "User already swapped");
-        require(now <= swapStartedBlock + 1 days, "Timeframe exipred, please use manualUpgradeTokens function");
+        require(now >= swapStartedBlock + 1 days, "Timeframe incorrect");
         require(_token == allowedSwapAddress01 || _token == allowedSwapAddress02, "Token not allowed to swap.");
 
         uint amountToUpgrade = ERC20(_token).balanceOf(msg.sender);
@@ -608,8 +870,16 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
 
         if (ERC20(_token).transferFrom(msg.sender, this, amountToUpgrade)) {
             require(ERC20(_token).balanceOf(msg.sender) == 0);
-            hasSwapped[msg.sender] = true;
+            if(
+              ERC20(allowedSwapAddress01).balanceOf(msg.sender) == 0  &&
+              ERC20(allowedSwapAddress02).balanceOf(msg.sender) == 0
+            ) {
+              hasSwapped[msg.sender] = true;
+            }
+
+            tokens[_token][msg.sender] = tokens[_token][msg.sender].add(amountToUpgrade);
             manualSwaps[msg.sender] = amountToUpgrade;
+            emit NewSwapRequest(msg.sender, amountToUpgrade);
         }
     }
 
@@ -617,11 +887,10 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * @dev Due to some bugs in the previous contracts, a handfull of users will
      * be unable to fully withdraw their masternodes. Owner can replace those tokens
      * who are forever locked up in the old contract with new ones.
-
      */
-    function getLockedTokens(address _holder) public view returns(uint) {
-        return CaelumAcceptERC20(this).tokens(this, _holder);
-    }
+     function getLockedTokens(address _contract, address _holder) public view returns(uint) {
+         return CaelumAcceptERC20(_contract).tokens(_contract, _holder);
+     }
     /**
      * @dev Approve a request for manual token swaps
      * @param _holder Holder The user who requests a swap.
@@ -646,12 +915,12 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * who are forever locked up in the old contract with new ones.
 
      */
-    function replaceLockedTokens(address _holder) onlyOwner public {
-        uint amountLocked = getLockedTokens(_holder);
-        balances[_holder] = balances[_holder].add(amountLocked);
-        emit Transfer(this, _holder, amountLocked);
-        hasSwapped[msg.sender] = true;
-    }
+     function replaceLockedTokens(address _contract, address _holder) onlyOwner public {
+         uint amountLocked = getLockedTokens(_contract, _holder);
+         balances[_holder] = balances[_holder].add(amountLocked);
+         emit Transfer(this, _holder, amountLocked);
+         hasSwapped[msg.sender] = true;
+     }
 
     /**
      * @dev Used to grant the mining contract rights to reward users.
@@ -659,7 +928,7 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * @param _receiver Who receives the mining reward.
      * @param _amount What amount to reward.
      */
-    function rewardExternal(address _receiver, uint _amount) onlyMiningContract external {
+    function rewardExternal(address _receiver, uint _amount) onlyMiningContract public {
         balances[_receiver] = balances[_receiver].add(_amount);
         emit Transfer(this, _receiver, _amount);
     }

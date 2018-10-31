@@ -28,7 +28,7 @@ contract CaelumMasternode is CaelumAbstractMasternode {
      * @dev Use this to externaly call the deleteMasternode function. ALWAYS set a modifier !
      */
     function _externalStopMasternode(address _received) onlyTokenContract public {
-        deleteMasternode(getLastPerUser(_received));
+        deleteMasternode(getLastActiveBy(_received));
     }
 
     function getMiningReward() public view returns(uint) {
@@ -40,21 +40,22 @@ contract CaelumMasternode is CaelumAbstractMasternode {
     function getDataFromContract() onlyOwner public returns(uint) {
 
         CaelumMasternode prev = CaelumMasternode(cloneDataFrom);
-        (uint epoch,
-            uint candidate,
-            uint round,
-            uint miningepoch,
-            uint globalreward,
-            uint powreward,
-            uint masternodereward,
-            uint usercounter) = prev.contractProgress();
+        (
+          uint epoch,
+          uint candidate,
+          uint round,
+          uint miningepoch,
+          uint globalreward,
+          uint powreward,
+          uint masternodereward,
+          uint usercounter
+        ) = prev.contractProgress();
 
         //masternodeEpoch = epoch;
         masternodeRound = round;
         miningEpoch = miningepoch;
         rewardsProofOfWork = powreward;
         rewardsMasternode = masternodereward;
-
     }
 
 }

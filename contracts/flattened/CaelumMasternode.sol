@@ -142,17 +142,17 @@ contract CaelumModifier is Ownable {
     address public _contract_masternode;
 
     modifier onlyMiningContract() {
-        require(msg.sender == _contract_miner);
+        require(msg.sender == _contract_miner, "Wrong sender");
         _;
     }
 
     modifier onlyTokenContract() {
-        require(msg.sender == _contract_token);
+        require(msg.sender == _contract_token, "Wrong sender");
         _;
     }
 
     modifier onlyMasternodeContract() {
-        require(msg.sender == _contract_masternode);
+        require(msg.sender == _contract_masternode, "Wrong sender");
         _;
     }
 
@@ -218,7 +218,8 @@ contract CaelumAbstractMasternode is CaelumModifier {
       0xb85ac167079020d93033a014efead75f14018522,
       0xc6d00915cbcf9abe9b27403f8d2338551f4ac43b,
       0x5256fe3f8e50e0f7f701525e814a2767da2cca06,
-      0x2cf23c6610a70d58d61efbdefd6454960b200c2c
+      0x2cf23c6610a70d58d61efbdefd6454960b200c2c,
+      0x002Bb739Cf93b29786d96Cc04172878487ABA988
     ];
 
     function addGenesis(address _genesis, bool _team) onlyOwner public {
@@ -239,12 +240,10 @@ contract CaelumAbstractMasternode is CaelumModifier {
     }
 
     function addMasternode(address _candidate) internal {
-
         /**
          * @dev userByAddress is used for general statistic data.
          * All masternode interaction happens by masternodeByIndex!
          */
-
         userByAddress[_candidate].isActive = true;
         userByAddress[_candidate].accountOwner = _candidate;
         userByAddress[_candidate].storedIndex = masternodeIDcounter;
@@ -274,26 +273,24 @@ contract CaelumAbstractMasternode is CaelumModifier {
         address getUserFrom = getUserFromID(_index);
         userByAddress[getUserFrom].isActive = false;
         masternodeByIndex[_index].isActive = false;
-        delete userByAddress[getUserFrom].indexcounter[_index];
-        delete masternodeByIndex[_index];
     }
 
     function getLastActiveBy(address _candidate) public view returns(uint) {
-
-        uint lastFound;
-        for (uint i = 0; i < userByAddress[_candidate].indexcounter.length; i++) {
-            if (masternodeByIndex[i].isActive == true) {
-                lastFound = i;
-            }
-        }
-        return lastFound;
+      uint lastFound;
+      for (uint i = 0; i < userByAddress[_candidate].indexcounter.length; i++) {
+          if (masternodeByIndex[userByAddress[_candidate].indexcounter[i]].isActive == true) {
+              lastFound = masternodeByIndex[userByAddress[_candidate].indexcounter[i]].storedIndex;
+          }
+      }
+      return lastFound;
     }
 
     function userHasActiveNodes(address _candidate) public view returns(bool) {
 
         bool lastFound;
+
         for (uint i = 0; i < userByAddress[_candidate].indexcounter.length; i++) {
-            if (masternodeByIndex[i].isActive == true) {
+            if (masternodeByIndex[userByAddress[_candidate].indexcounter[i]].isActive == true) {
                 lastFound = true;
             }
         }
@@ -482,22 +479,22 @@ contract CaelumMasternode is CaelumAbstractMasternode {
      * @dev Use this to externaly call the _arrangeMasternodeFlow function. ALWAYS set a modifier !
      */
 
-    function _externalArrangeFlow() onlyMiningContract public {
+    function _externalArrangeFlow() onlyMiningContract onlyTokenContract public {
         _arrangeMasternodeFlow();
     }
 
     /**
      * @dev Use this to externaly call the addMasternode function. ALWAYS set a modifier !
      */
-    function _externalAddMasternode(address _received) onlyTokenContract external {
+    function _externalAddMasternode(address _received) onlyTokenContract public {
         addMasternode(_received);
     }
 
     /**
      * @dev Use this to externaly call the deleteMasternode function. ALWAYS set a modifier !
      */
-    function _externalStopMasternode(address _received) onlyTokenContract external {
-        deleteMasternode(getLastPerUser(_received));
+    function _externalStopMasternode(address _received) onlyTokenContract public {
+        deleteMasternode(getLastActiveBy(_received));
     }
 
     function getMiningReward() public view returns(uint) {
@@ -509,21 +506,22 @@ contract CaelumMasternode is CaelumAbstractMasternode {
     function getDataFromContract() onlyOwner public returns(uint) {
 
         CaelumMasternode prev = CaelumMasternode(cloneDataFrom);
-        (uint epoch,
-            uint candidate,
-            uint round,
-            uint miningepoch,
-            uint globalreward,
-            uint powreward,
-            uint masternodereward,
-            uint usercounter) = prev.contractProgress();
+        (
+          uint epoch,
+          uint candidate,
+          uint round,
+          uint miningepoch,
+          uint globalreward,
+          uint powreward,
+          uint masternodereward,
+          uint usercounter
+        ) = prev.contractProgress();
 
         //masternodeEpoch = epoch;
         masternodeRound = round;
         miningEpoch = miningepoch;
         rewardsProofOfWork = powreward;
         rewardsMasternode = masternodereward;
-
     }
 
 }
