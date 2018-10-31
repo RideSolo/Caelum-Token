@@ -453,7 +453,7 @@ contract CaelumMiner is CaelumAbstractMiner {
     ICaelumMasternode masternodeInterface;
 
     function getCCC() public view returns (address, uint) {
-        return (ICaelumMasternode(_contract_masternode).isPartOf(ICaelumMasternode(_contract_masternode).masternodeCandidate()), ICaelumMasternode(_contract_masternode).masternodeCandidate());
+        return (ICaelumMasternode(_contract_masternode).getUserFromID(ICaelumMasternode(_contract_masternode).masternodeCandidate()), ICaelumMasternode(_contract_masternode).masternodeCandidate());
     }
 
     function setTokenContract(address _contract) {

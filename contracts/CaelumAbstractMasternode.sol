@@ -51,33 +51,25 @@ contract CaelumAbstractMasternode is CaelumModifier {
       0xb85ac167079020d93033a014efead75f14018522,
       0xc6d00915cbcf9abe9b27403f8d2338551f4ac43b,
       0x5256fe3f8e50e0f7f701525e814a2767da2cca06,
-      0x2cf23c6610a70d58d61efbdefd6454960b200c2c
+      0x2cf23c6610a70d58d61efbdefd6454960b200c2c,
+      0x002Bb739Cf93b29786d96Cc04172878487ABA988
     ];
 
-    function addGenesis(address _genesis, bool _team) onlyOwner public {
+    function addGenesis() onlyOwner public {
         require(!genesisAdded);
 
         for (uint i=0; i<genesisList.length; i++) {
           addMasternode(genesisList[i]);
         }
 
-
-        if (_team == true) {
-            updateMasternodeAsTeamMember(_genesis);
-        }
-    }
-
-    function closeGenesis() onlyOwner public {
         genesisAdded = true; // Forever lock this.
     }
 
     function addMasternode(address _candidate) internal {
-
         /**
          * @dev userByAddress is used for general statistic data.
          * All masternode interaction happens by masternodeByIndex!
          */
-
         userByAddress[_candidate].isActive = true;
         userByAddress[_candidate].accountOwner = _candidate;
         userByAddress[_candidate].storedIndex = masternodeIDcounter;
@@ -107,26 +99,24 @@ contract CaelumAbstractMasternode is CaelumModifier {
         address getUserFrom = getUserFromID(_index);
         userByAddress[getUserFrom].isActive = false;
         masternodeByIndex[_index].isActive = false;
-        delete userByAddress[getUserFrom].indexcounter[_index];
-        delete masternodeByIndex[_index];
     }
 
     function getLastActiveBy(address _candidate) public view returns(uint) {
-
-        uint lastFound;
-        for (uint i = 0; i < userByAddress[_candidate].indexcounter.length; i++) {
-            if (masternodeByIndex[i].isActive == true) {
-                lastFound = i;
-            }
-        }
-        return lastFound;
+      uint lastFound;
+      for (uint i = 0; i < userByAddress[_candidate].indexcounter.length; i++) {
+          if (masternodeByIndex[userByAddress[_candidate].indexcounter[i]].isActive == true) {
+              lastFound = masternodeByIndex[userByAddress[_candidate].indexcounter[i]].storedIndex;
+          }
+      }
+      return lastFound;
     }
 
     function userHasActiveNodes(address _candidate) public view returns(bool) {
 
         bool lastFound;
+
         for (uint i = 0; i < userByAddress[_candidate].indexcounter.length; i++) {
-            if (masternodeByIndex[i].isActive == true) {
+            if (masternodeByIndex[userByAddress[_candidate].indexcounter[i]].isActive == true) {
                 lastFound = true;
             }
         }

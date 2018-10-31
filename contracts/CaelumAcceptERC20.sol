@@ -3,14 +3,11 @@ pragma solidity ^0.4.25;
 import "./libs/SafeMath.sol";
 import "./CaelumModifier.sol";
 import "./libs/StandardToken.sol";
-import "./interfaces/IRemoteFunctions.sol";
 import "./interfaces/ERC20Interface.sol";
 import "./CaelumVotings.sol";
 
 contract CaelumAcceptERC20 is CaelumModifier, CaelumVotings {
-    using SafeMath
-    for uint;
-
+    using SafeMath for uint;
 
     address[] public tokensList;
     bool setOwnContract = true;
@@ -130,18 +127,16 @@ contract CaelumAcceptERC20 is CaelumModifier, CaelumVotings {
      * @param amount Amount to withdraw
      */
     function withdrawCollateral(address token, uint amount) public {
-        require(token != 0); // token should be an actual address
+        require(token != 0, "N"); // token should be an actual address
         require(isAcceptedToken(token), "ERC20 not authorised"); // Should be a token from our list
         require(amount == getAcceptedTokenAmount(token)); // The amount needs to match our set amount, allow only one withdrawal at a time.
-        require(tokens[token][msg.sender] >= amount); // The owner must own at least this amount of tokens.
-
-        uint amountToWithdraw = tokens[token][msg.sender];
-        tokens[token][msg.sender] = 0;
-
-        IRemoteFunctions(_contract_masternode)._externalStopMasternode(msg.sender);
+        uint amountToWithdraw = amount;
+        tokens[token][msg.sender] = tokens[token][msg.sender] - amount;
 
         if (!StandardToken(token).transfer(msg.sender, amountToWithdraw)) revert("error msg");
         emit Withdraw(token, msg.sender, amountToWithdraw, amountToWithdraw);
+
+        IRemoteFunctions(_contract_masternode)._externalStopMasternode(msg.sender);
     }
 
 }

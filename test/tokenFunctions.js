@@ -2,7 +2,6 @@ var _clmTOKEN = artifacts.require("./CaelumToken.sol");
 var _clmSwapTOKEN = artifacts.require("./CaelumTokenToSwap.sol");
 var _clmMasternode = artifacts.require("./CaelumMasternode.sol");
 
-
 let catchRevert = require("./exceptions.js").catchRevert;
 
 contract('CaelumToken main functions', function(accounts) {
@@ -17,15 +16,16 @@ contract('CaelumToken main functions', function(accounts) {
   })
 
   it('Execute swap', async function() {
-    await mainToken.setSwap(swapToken.address);
+    await clmMASTERNODE.setTokenContract(mainToken.address);
+    await mainToken.setMasternodeContract(clmMASTERNODE.address);
+    await mainToken.setMiningContract(clmMASTERNODE.address);
+    await mainToken.setSwap(swapToken.address, swapToken.address);
     await swapToken.approve(mainToken.address, 420000 * 1e18);
     await mainToken.upgradeTokens(swapToken.address);
   });
 
   it('Execute collateral deposit for deposit/withdraw test', async function() {
-    await clmMASTERNODE.setTokenContract(mainToken.address);
-    await mainToken.setMasternodeContract(clmMASTERNODE.address);
-    await mainToken.setMiningContract(clmMASTERNODE.address);
+
     await mainToken.addOwnToken();
     await mainToken.approve(mainToken.address, 5000 * 1e18);
     await mainToken.depositCollateral(mainToken.address, 5000 * 1e8);
@@ -33,7 +33,7 @@ contract('CaelumToken main functions', function(accounts) {
 
 
   it("Should have 5000 tokens locked in the contract", async function () {
-      let status = await mainToken.getLockedTokens(accounts[0]);
+      let status = await mainToken.getLockedTokens(mainToken.address, accounts[0]);
       assert.equal  (status.valueOf(), 5000 * 1e8);
   })
 
@@ -44,7 +44,7 @@ contract('CaelumToken main functions', function(accounts) {
   })
 
   it("Should have 0 tokens locked in the contract", async function () {
-      let status = await mainToken.getLockedTokens(accounts[0]);
+      let status = await mainToken.getLockedTokens(mainToken.address, accounts[0]);
       assert.equal  (status.valueOf(), 0 * 1e8);
   })
 
@@ -59,12 +59,12 @@ contract('CaelumToken main functions', function(accounts) {
   });
 
   it("Should have 5000 tokens locked in the contract", async function () {
-      let status = await mainToken.getLockedTokens(accounts[0]);
+      let status = await mainToken.getLockedTokens(mainToken.address, accounts[0]);
       assert.equal  (status.valueOf(), 5000 * 1e8);
   })
 
   it("Should allow owner to replace the tokens now locked in the contract", async function () {
-      await mainToken.replaceLockedTokens(accounts[0]);
+      await mainToken.replaceLockedTokens(mainToken.address, accounts[0]);
   })
 
   it('Account 0 should now have the new tokens as balance', async function() {
