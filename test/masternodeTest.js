@@ -98,7 +98,7 @@ contract('CaelumMasternode main functions', function(accounts) {
 
   it("Should be able to become a masternode upon depositing collateral [account 0 - MN 1]", async function () {
     console.log("\n test for genesis accounts \n");
-    await clmMASTERNODE.addGenesis(0x0,false);
+    await clmMASTERNODE.addGenesis();
   })
 
   it("Should return active nodes for account 2", async function () {

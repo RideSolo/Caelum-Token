@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 import "./libs/SafeMath.sol";
 import "./CaelumModifier.sol";

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 import "./CaelumAcceptERC20.sol";
 import "./libs/StandardToken.sol";

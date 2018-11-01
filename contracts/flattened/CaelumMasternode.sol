@@ -1,9 +1,9 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 // File: contracts\libs\SafeMath.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 library SafeMath {
 
@@ -74,7 +74,7 @@ interface ICaelumMiner {
 // File: contracts\libs\Ownable.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 contract Ownable {
   address public owner;
@@ -222,20 +222,13 @@ contract CaelumAbstractMasternode is CaelumModifier {
       0x002Bb739Cf93b29786d96Cc04172878487ABA988
     ];
 
-    function addGenesis(address _genesis, bool _team) onlyOwner public {
+    function addGenesis() onlyOwner public {
         require(!genesisAdded);
 
         for (uint i=0; i<genesisList.length; i++) {
           addMasternode(genesisList[i]);
         }
 
-
-        if (_team == true) {
-            updateMasternodeAsTeamMember(_genesis);
-        }
-    }
-
-    function closeGenesis() onlyOwner public {
         genesisAdded = true; // Forever lock this.
     }
 
@@ -273,6 +266,7 @@ contract CaelumAbstractMasternode is CaelumModifier {
         address getUserFrom = getUserFromID(_index);
         userByAddress[getUserFrom].isActive = false;
         masternodeByIndex[_index].isActive = false;
+        userCounter--;
     }
 
     function getLastActiveBy(address _candidate) public view returns(uint) {

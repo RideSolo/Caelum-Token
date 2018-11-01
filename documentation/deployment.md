@@ -17,3 +17,8 @@ On `CaelumMasternode.sol`
 On `CaelumToken.sol`
 
  - Call `addOwnToken` to approve your own token as masternode collateral
+
+On `CaelumMiner.sol`
+
+  - Call `getDataFromContract` with the old contract address to copy the data
+  

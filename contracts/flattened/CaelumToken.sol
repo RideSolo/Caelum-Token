@@ -1,9 +1,9 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 // File: contracts\libs\SafeMath.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 library SafeMath {
 
@@ -68,7 +68,7 @@ library SafeMath {
 // File: contracts\libs\Ownable.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 contract Ownable {
   address public owner;
@@ -167,7 +167,7 @@ contract CaelumModifier is Ownable {
 // File: contracts\libs\ERC20Basic.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 contract ERC20Basic {
     function totalSupply() public view returns(uint256);
@@ -181,7 +181,7 @@ contract ERC20Basic {
 // File: contracts\libs\ERC20.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 contract ERC20 is ERC20Basic {
     function allowance(address _owner, address _spender) public view returns(uint256);
@@ -200,7 +200,7 @@ contract ERC20 is ERC20Basic {
 // File: contracts\libs\BasicToken.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 contract BasicToken is ERC20Basic {
     using SafeMath
@@ -246,7 +246,7 @@ contract BasicToken is ERC20Basic {
 // File: contracts\libs\StandardToken.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 contract StandardToken is ERC20, BasicToken {
 
@@ -788,19 +788,14 @@ contract CaelumAcceptERC20 is CaelumModifier, CaelumVotings {
 // File: contracts\CaelumToken.sol
 
 contract CaelumToken is CaelumAcceptERC20, StandardToken {
-    using SafeMath
-    for uint;
-
-    ERC20 previousContract;
+    using SafeMath for uint;
 
     bool public swapClosed = false;
-    uint public swapCounter;
 
     string public symbol = "CLM";
     string public name = "Caelum Token";
     uint8 public decimals = 8;
     uint256 public totalSupply = 2100000000000000;
-
 
     address public allowedSwapAddress01 = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
     address public allowedSwapAddress02 = 0x16Da16948e5092A3D2aA71Aca7b57b8a9CFD8ddb;
@@ -913,7 +908,6 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * @dev Due to some bugs in the previous contracts, a handfull of users will
      * be unable to fully withdraw their masternodes. Owner can replace those tokens
      * who are forever locked up in the old contract with new ones.
-
      */
      function replaceLockedTokens(address _contract, address _holder) onlyOwner public {
          uint amountLocked = getLockedTokens(_contract, _holder);

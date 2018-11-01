@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 
 import "./CaelumAbstractMasternode.sol";
@@ -13,7 +13,7 @@ contract CaelumMasternode is CaelumAbstractMasternode {
      * @dev Use this to externaly call the _arrangeMasternodeFlow function. ALWAYS set a modifier !
      */
 
-    function _externalArrangeFlow() onlyMiningContract onlyTokenContract public {
+    function _externalArrangeFlow() onlyMiningContract public {
         _arrangeMasternodeFlow();
     }
 

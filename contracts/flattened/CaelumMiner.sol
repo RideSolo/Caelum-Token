@@ -1,9 +1,9 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 // File: contracts\libs\SafeMath.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 library SafeMath {
 
@@ -68,7 +68,7 @@ library SafeMath {
 // File: contracts\libs\ExtendedMath.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 library ExtendedMath {
     function limitLessThan(uint a, uint b) internal pure returns(uint c) {
@@ -80,7 +80,7 @@ library ExtendedMath {
 // File: contracts\libs\Ownable.sol
 
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 contract Ownable {
   address public owner;
@@ -209,24 +209,24 @@ interface EIP918Interface  {
 	/*
      * Returns the challenge number
      **/
-    function getChallengeNumber() external constant returns (bytes32);
+    function getChallengeNumber() external view returns (bytes32);
 
     /*
      * Returns the mining difficulty. The number of digits that the digest of the PoW solution requires which
      * typically auto adjusts during reward generation.
      **/
-    function getMiningDifficulty() external constant returns (uint);
+    function getMiningDifficulty() external view returns (uint);
 
     /*
      * Returns the mining target
      **/
-    function getMiningTarget() external constant returns (uint);
+    function getMiningTarget() external view returns (uint);
 
     /*
      * Return the current reward amount. Depending on the algorithm, typically rewards are divided every reward era
      * as tokens are mined to provide scarcity
      **/
-    function getMiningReward() external constant returns (uint);
+    function getMiningReward() external view returns (uint);
 
     /*
      * Upon successful verification and reward the mint method dispatches a Mint Event indicating the reward address,
@@ -451,10 +451,7 @@ contract CaelumMiner is CaelumAbstractMiner {
 
     ICaelumToken tokenInterface;
     ICaelumMasternode masternodeInterface;
-
-    function getCCC() public view returns (address, uint) {
-        return (ICaelumMasternode(_contract_masternode).getUserFromID(ICaelumMasternode(_contract_masternode).masternodeCandidate()), ICaelumMasternode(_contract_masternode).masternodeCandidate());
-    }
+    bool ACTIVE_STATE = false;
 
     function setTokenContract(address _contract) {
         _contract_token = _contract;
@@ -467,6 +464,7 @@ contract CaelumMiner is CaelumAbstractMiner {
     }
 
     function mint(uint256 nonce, bytes32 challenge_digest) public returns(bool success) {
+        require(ACTIVE_STATE);
 
         _hash(nonce, challenge_digest);
 
@@ -537,8 +535,27 @@ contract CaelumMiner is CaelumAbstractMiner {
         uint usercounter
     )
     {
-        return ICaelumMasternode(_contract_token).contractProgress();
+        return ICaelumMasternode(_contract_masternode).contractProgress();
 
+    }
+
+    /**
+     * @dev Call this function prior to mining to copy all old contract values.
+     * This included minted tokens, difficulty, etc..
+     */
+    function getDataFromContract (address _previous_contract) onlyOwner public {
+        require(_contract_token != 0);
+        require(_contract_masternode != 0);
+
+        CaelumAbstractMiner prev = CaelumAbstractMiner(_previous_contract);
+        difficulty = prev.difficulty();
+        rewardEra = prev.rewardEra();
+        MINING_RATE_FACTOR = prev.MINING_RATE_FACTOR();
+        maxSupplyForEra = prev.maxSupplyForEra();
+        tokensMinted = prev.tokensMinted();
+        epochCount = prev.epochCount();
+
+        ACTIVE_STATE = true;
     }
 
 }

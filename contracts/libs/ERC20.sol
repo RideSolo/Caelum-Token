@@ -1,5 +1,5 @@
 //solium-disable linebreak-style
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 import "./ERC20Basic.sol";
 

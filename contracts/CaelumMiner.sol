@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 import "./CaelumAbstractMiner.sol";
 
@@ -6,10 +6,7 @@ contract CaelumMiner is CaelumAbstractMiner {
 
     ICaelumToken tokenInterface;
     ICaelumMasternode masternodeInterface;
-
-    function getCCC() public view returns (address, uint) {
-        return (ICaelumMasternode(_contract_masternode).getUserFromID(ICaelumMasternode(_contract_masternode).masternodeCandidate()), ICaelumMasternode(_contract_masternode).masternodeCandidate());
-    }
+    bool ACTIVE_STATE = false;
 
     function setTokenContract(address _contract) {
         _contract_token = _contract;
@@ -22,6 +19,7 @@ contract CaelumMiner is CaelumAbstractMiner {
     }
 
     function mint(uint256 nonce, bytes32 challenge_digest) public returns(bool success) {
+        require(ACTIVE_STATE);
 
         _hash(nonce, challenge_digest);
 
@@ -92,8 +90,29 @@ contract CaelumMiner is CaelumAbstractMiner {
         uint usercounter
     )
     {
-        return ICaelumMasternode(_contract_token).contractProgress();
+        return ICaelumMasternode(_contract_masternode).contractProgress();
 
+    }
+
+    /**
+     * @dev Call this function prior to mining to copy all old contract values.
+     * This included minted tokens, difficulty, etc..
+     */
+
+    function getDataFromContract (address _previous_contract) onlyOwner public {
+        require (ACTIVE_STATE == false);
+        require(_contract_token != 0);
+        require(_contract_masternode != 0);
+
+        CaelumAbstractMiner prev = CaelumAbstractMiner(_previous_contract);
+        difficulty = prev.difficulty();
+        rewardEra = prev.rewardEra();
+        MINING_RATE_FACTOR = prev.MINING_RATE_FACTOR();
+        maxSupplyForEra = prev.maxSupplyForEra();
+        tokensMinted = prev.tokensMinted();
+        epochCount = prev.epochCount();
+
+        ACTIVE_STATE = true;
     }
 
 }

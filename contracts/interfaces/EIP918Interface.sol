@@ -11,24 +11,24 @@ interface EIP918Interface  {
 	/*
      * Returns the challenge number
      **/
-    function getChallengeNumber() external constant returns (bytes32);
+    function getChallengeNumber() external view returns (bytes32);
 
     /*
      * Returns the mining difficulty. The number of digits that the digest of the PoW solution requires which
      * typically auto adjusts during reward generation.
      **/
-    function getMiningDifficulty() external constant returns (uint);
+    function getMiningDifficulty() external view returns (uint);
 
     /*
      * Returns the mining target
      **/
-    function getMiningTarget() external constant returns (uint);
+    function getMiningTarget() external view returns (uint);
 
     /*
      * Return the current reward amount. Depending on the algorithm, typically rewards are divided every reward era
      * as tokens are mined to provide scarcity
      **/
-    function getMiningReward() external constant returns (uint);
+    function getMiningReward() external view returns (uint);
 
     /*
      * Upon successful verification and reward the mint method dispatches a Mint Event indicating the reward address,

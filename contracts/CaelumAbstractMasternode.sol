@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.25;
 
 import "./libs/SafeMath.sol";
 import "./interfaces/ICaelumMiner.sol";
@@ -99,6 +99,7 @@ contract CaelumAbstractMasternode is CaelumModifier {
         address getUserFrom = getUserFromID(_index);
         userByAddress[getUserFrom].isActive = false;
         masternodeByIndex[_index].isActive = false;
+        userCounter--;
     }
 
     function getLastActiveBy(address _candidate) public view returns(uint) {
