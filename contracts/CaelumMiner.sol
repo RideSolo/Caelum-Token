@@ -2,24 +2,56 @@ pragma solidity 0.4.25;
 
 import "./CaelumAbstractMiner.sol";
 
-contract CaelumMiner is CaelumAbstractMiner {
+contract CaelumMiner is Ownable, CaelumAbstractMiner {
 
     ICaelumToken tokenInterface;
     ICaelumMasternode masternodeInterface;
-    bool ACTIVE_STATE = false;
 
-    function setTokenContract(address _contract) {
-        _contract_token = _contract;
-        tokenInterface = ICaelumToken(_contract);
+    CaelumModifierAbstract _internalMod;
+
+    function setModifierContract (address _t) {
+        _internalMod = CaelumModifierAbstract(_t);
+        setTokenContract();
+        setMasternodeContract();
     }
 
-    function setMasternodeContract(address _contract) onlyOwner public {
-        _contract_masternode = _contract;
-        masternodeInterface = ICaelumMasternode(_contract);
+    modifier onlyMiningContract() {
+      require(msg.sender == _internalMod._contract_miner(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyTokenContract() {
+          require(msg.sender == _internalMod._contract_token(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyMasternodeContract() {
+          require(msg.sender == _internalMod._contract_masternode(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyVotingOrOwner() {
+          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
+          _;
+      }
+
+      modifier onlyVotingContract() {
+          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
+          _;
+      }
+
+    bool ACTIVE_STATE = false;
+
+    function setTokenContract() {
+        tokenInterface = ICaelumToken(_internalMod._contract_token());
+    }
+
+    function setMasternodeContract() onlyOwner public {
+        masternodeInterface = ICaelumMasternode(_internalMod._contract_masternode());
     }
 
     function mint(uint256 nonce, bytes32 challenge_digest) public returns(bool success) {
-        require(ACTIVE_STATE);
+        require(ACTIVE_STATE == true);
 
         _hash(nonce, challenge_digest);
 
@@ -55,7 +87,7 @@ contract CaelumMiner is CaelumAbstractMiner {
       uint _mnReward = masternodeInterface.rewardsMasternode();
       if (masternodeInterface.masternodeIDcounter() == 0) return 0;
 
-      address _mnCandidate = masternodeInterface.getUserFromID(masternodeInterface.masternodeCandidate()); // userByIndex[masternodeCandidate].accountOwner;
+      address _mnCandidate = masternodeInterface.getUserFromID(masternodeInterface.masternodeCandidate());
       if (_mnCandidate == 0x0) return 0;
 
       tokenInterface.rewardExternal(_mnCandidate, _mnReward);
@@ -74,6 +106,14 @@ contract CaelumMiner is CaelumAbstractMiner {
         return masternodeInterface.rewardsProofOfWork();
     }
 
+    function rewardsProofOfWork() public view returns(uint) {
+        return masternodeInterface.rewardsProofOfWork();
+    }
+
+    function rewardsMasternode() public view returns(uint) {
+        return masternodeInterface.rewardsMasternode();
+    }
+
     function getMiningReward() public view returns(uint) {
         return (baseMiningReward * 1e8).div(2 ** rewardEra);
     }
@@ -90,7 +130,7 @@ contract CaelumMiner is CaelumAbstractMiner {
         uint usercounter
     )
     {
-        return ICaelumMasternode(_contract_masternode).contractProgress();
+        return ICaelumMasternode(_internalMod._contract_masternode()).contractProgress();
 
     }
 
@@ -98,11 +138,9 @@ contract CaelumMiner is CaelumAbstractMiner {
      * @dev Call this function prior to mining to copy all old contract values.
      * This included minted tokens, difficulty, etc..
      */
-
     function getDataFromContract (address _previous_contract) onlyOwner public {
-        require (ACTIVE_STATE == false);
-        require(_contract_token != 0);
-        require(_contract_masternode != 0);
+        require(_internalMod._contract_token() != 0);
+        require(_internalMod._contract_masternode() != 0);
 
         CaelumAbstractMiner prev = CaelumAbstractMiner(_previous_contract);
         difficulty = prev.difficulty();

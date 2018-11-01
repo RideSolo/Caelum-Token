@@ -9,7 +9,7 @@ import "./interfaces/ICaelumToken.sol";
 import "./AbstractERC918.sol";
 
 
-contract CaelumAbstractMiner is CaelumModifier, AbstractERC918 {
+contract CaelumAbstractMiner is AbstractERC918 {
     /**
      * CaelumMiner contract.
      *
