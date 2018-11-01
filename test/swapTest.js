@@ -53,11 +53,12 @@ contract('CaelumToken main functions', function(accounts) {
   // Token swap
   it('Set modifier', async function() {
     await mainToken.setModifierContract(clmMod.address);
+    await clmMASTERNODE.setModifierContract(clmMod.address);
     await clmMod.setTokenContract(mainToken.address);
     await clmMod.setMasternodeContract(clmMASTERNODE.address);
     await clmMod.setMiningContract(clmMASTERNODE.address);
   });
-  
+
   it('Should set the old token address on the new contract', async function() {
     let swapTokens = await mainToken.setSwap(swapToken.address, swapToken.address);
     //assert.ok(swapTokens);

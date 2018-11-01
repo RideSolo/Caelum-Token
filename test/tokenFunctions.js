@@ -22,13 +22,14 @@ contract('CaelumMasternode main functions', function(accounts) {
 
   it('Set modifier', async function() {
     await mainToken.setModifierContract(clmMod.address);
+    await clmMASTERNODE.setModifierContract(clmMod.address);
     await clmMod.setTokenContract(mainToken.address);
     await clmMod.setMasternodeContract(clmMASTERNODE.address);
     await clmMod.setMiningContract(clmMASTERNODE.address);
   });
 
   it('Execute swap', async function() {
-    await clmMASTERNODE.setTokenContract(mainToken.address);
+    //await clmMASTERNODE.setTokenContract(mainToken.address);
     //await mainToken.setMasternodeContract(clmMASTERNODE.address);
     //await mainToken.setMiningContract(clmMASTERNODE.address);
     await mainToken.setSwap(swapToken.address, swapToken.address);

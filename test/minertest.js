@@ -22,6 +22,7 @@ contract('CaelumMasternode main functions', function(accounts) {
 
   it('Set modifier', async function() {
     await mainToken.setModifierContract(clmMod.address);
+    await clmMASTERNODE.setModifierContract(clmMod.address);
     await clmMod.setTokenContract(mainToken.address);
     await clmMod.setMasternodeContract(clmMASTERNODE.address);
     await clmMod.setMiningContract(clmMASTERNODE.address);

@@ -1,11 +1,12 @@
 pragma solidity 0.4.25;
 
 import "./libs/SafeMath.sol";
+import "./libs/Ownable.sol";
 import "./interfaces/ICaelumMiner.sol";
-import "./CaelumModifier.sol";
+import "./CaelumModifierAbstract.sol";
 
 
-contract CaelumAbstractMasternode is CaelumModifier {
+contract CaelumAbstractMasternode is Ownable {
 
     struct MasterNode {
         address accountOwner;
