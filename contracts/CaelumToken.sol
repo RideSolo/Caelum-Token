@@ -14,13 +14,14 @@ interface ICaelumMasternode {
     function userCounter() external view returns(uint);
     function contractProgress() external view returns (uint, uint, uint, uint, uint, uint, uint, uint);
 }
-contract CaelumToken is CaelumAcceptERC20, StandardToken {
+
+contract CaelumToken is Ownable, CaelumAcceptERC20, StandardToken {
     using SafeMath for uint;
 
     ICaelumMasternode masternodeInterface;
 
     bool public swapClosed = false;
-    bool isOnTestNet = false;
+    bool isOnTestNet = true;
 
     string public symbol = "CLM";
     string public name = "Caelum Token";
@@ -37,6 +38,31 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
 
     event NewSwapRequest(address _swapper, uint _amount);
     event TokenSwapped(address _swapper, uint _amount);
+
+      modifier onlyMiningContract() {
+      require(msg.sender == _internalMod._contract_miner(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyTokenContract() {
+          require(msg.sender == _internalMod._contract_token(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyMasternodeContract() {
+          require(msg.sender == _internalMod._contract_masternode(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyVotingOrOwner() {
+          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
+          _;
+      }
+
+      modifier onlyVotingContract() {
+          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
+          _;
+      }
 
     constructor() public {
         addOwnToken();
@@ -206,28 +232,31 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
         uint usercounter
     )
     {
-        return ICaelumMasternode(_contract_masternode).contractProgress();
+        return ICaelumMasternode(_internalMod._contract_masternode()).contractProgress();
 
     }
 
-    /** Override **/
-    function setMasternodeContract(address _contract) onlyOwner public {
-        require (now <= publishedDate + 10 days);
-        _contract_masternode = _contract;
-        masternodeInterface = ICaelumMasternode(_contract);
+    /**
+     * @dev pull new masternode contract from the modifier contract
+     */
+    function setMasternodeContract() onlyOwner public {
+        require (now <= _internalMod.publishedDate() + 10 days);
+        masternodeInterface = ICaelumMasternode(_internalMod._contract_masternode());
     }
 
-    /** Override **/
-    function VoteForMasternodeContract(address _contract) onlyVotingContract external{
-        masternodeInterface = ICaelumMasternode(_contract);
-        _contract_masternode = _contract;
+    /**
+    * @dev Move the voting away from token. All votes will be made from the voting
+    */
+    function VoteModifierContract (address _t) onlyVotingContract external {
+        _internalMod = CaelumModifierAbstract(_t);
     }
+
 
     /**
      * @dev Needed for testnet only. Comment codeblock out before deploy, leave it as example.
      */
 
-    function setSwapTestnet(address _t, address _b) onlyOwner public {
+    function setSwap(address _t, address _b) onlyOwner public {
         require (isOnTestNet == true);
         allowedSwapAddress01 = _t;
         allowedSwapAddress02 = _b;
