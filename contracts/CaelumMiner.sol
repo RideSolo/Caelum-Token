@@ -3,7 +3,7 @@ pragma solidity 0.4.25;
 import "./CaelumAbstractMiner.sol";
 import "./CaelumModifierAbstract.sol";
 
-contract CaelumMiner is Ownable, CaelumAbstractMiner {
+contract CaelumMiner is InterfaceModifiers, CaelumAbstractMiner {
 
     ICaelumToken tokenInterface;
     ICaelumMasternode masternodeInterface;
@@ -15,31 +15,6 @@ contract CaelumMiner is Ownable, CaelumAbstractMiner {
         setTokenContract();
         setMasternodeContract();
     }
-
-    modifier onlyMiningContract() {
-      require(msg.sender == _internalMod._contract_miner(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyTokenContract() {
-          require(msg.sender == _internalMod._contract_token(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyMasternodeContract() {
-          require(msg.sender == _internalMod._contract_masternode(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyVotingOrOwner() {
-          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
-          _;
-      }
-
-      modifier onlyVotingContract() {
-          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
-          _;
-      }
 
     bool ACTIVE_STATE = false;
 
