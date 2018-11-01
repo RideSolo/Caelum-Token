@@ -1,5 +1,6 @@
 
 import "./libs/Ownable.sol";
+
 contract CaelumModifierAbstract is Ownable {
 
     address public _contract_miner;
@@ -95,4 +96,37 @@ contract CaelumModifierAbstract is Ownable {
     function VoteForMiningContract(address _contract) onlyVotingContract external{
         _contract_voting = _contract;
     }
+}
+
+contract InterfaceModifiers is Ownable {
+    CaelumModifierAbstract _internalMod;
+
+    function setModifierContract (address _t) {
+        _internalMod = CaelumModifierAbstract(_t);
+    }
+
+    modifier onlyMiningContract() {
+      require(msg.sender == _internalMod._contract_miner(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyTokenContract() {
+          require(msg.sender == _internalMod._contract_token(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyMasternodeContract() {
+          require(msg.sender == _internalMod._contract_masternode(), "Wrong sender");
+          _;
+      }
+
+      modifier onlyVotingOrOwner() {
+          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
+          _;
+      }
+
+      modifier onlyVotingContract() {
+          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
+          _;
+      }
 }

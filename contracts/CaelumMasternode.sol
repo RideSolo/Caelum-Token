@@ -2,43 +2,16 @@ pragma solidity 0.4.25;
 
 
 import "./CaelumAbstractMasternode.sol";
+import "./CaelumModifierAbstract.sol";
 
 
-contract CaelumMasternode is CaelumAbstractMasternode {
+contract CaelumMasternode is InterfaceModifiers, CaelumAbstractMasternode {
 
     bool minerSet = false;
     bool tokenSet = false;
 
     CaelumModifierAbstract _internalMod;
 
-    function setModifierContract (address _t) {
-        _internalMod = CaelumModifierAbstract(_t);
-    }
-
-    modifier onlyMiningContract() {
-      require(msg.sender == _internalMod._contract_miner(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyTokenContract() {
-          require(msg.sender == _internalMod._contract_token(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyMasternodeContract() {
-          require(msg.sender == _internalMod._contract_masternode(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyVotingOrOwner() {
-          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
-          _;
-      }
-
-      modifier onlyVotingContract() {
-          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
-          _;
-      }
 
     /**
      * @dev Use this to externaly call the _arrangeMasternodeFlow function. ALWAYS set a modifier !

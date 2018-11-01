@@ -1,6 +1,7 @@
 pragma solidity 0.4.25;
 
 import "./CaelumAbstractMiner.sol";
+import "./CaelumModifierAbstract.sol";
 
 contract CaelumMiner is Ownable, CaelumAbstractMiner {
 
