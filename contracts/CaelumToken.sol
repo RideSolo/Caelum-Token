@@ -39,31 +39,6 @@ contract CaelumToken is Ownable, CaelumAcceptERC20, StandardToken {
     event NewSwapRequest(address _swapper, uint _amount);
     event TokenSwapped(address _swapper, uint _amount);
 
-      modifier onlyMiningContract() {
-      require(msg.sender == _internalMod._contract_miner(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyTokenContract() {
-          require(msg.sender == _internalMod._contract_token(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyMasternodeContract() {
-          require(msg.sender == _internalMod._contract_masternode(), "Wrong sender");
-          _;
-      }
-
-      modifier onlyVotingOrOwner() {
-          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
-          _;
-      }
-
-      modifier onlyVotingContract() {
-          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
-          _;
-      }
-
     constructor() public {
         addOwnToken();
         swapStartedBlock = now;

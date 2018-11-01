@@ -12,7 +12,7 @@ interface IRemoteFunctions {
   function isMasternodeOwner(address) external view returns (bool);
   function userHasActiveNodes(address) external view returns (bool);
 }
-contract CaelumAcceptERC20  {
+contract CaelumAcceptERC20 is InterfaceModifiers {
     using SafeMath for uint;
 
     address[] public tokensList;
