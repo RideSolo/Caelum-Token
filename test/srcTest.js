@@ -7,7 +7,7 @@ var srcModifier = artifacts.require("./src/contracts/CaelumModifierVoting.sol");
 
 let catchRevert = require("./exceptions.js").catchRevert;
 
-/**
+
 contract('Source main functions', function(accounts) {
   var mainToken
   var mainSwapToken
@@ -137,7 +137,7 @@ contract('Source main functions', function(accounts) {
 
 
 })
-*/
+
 // second
 
 contract('Source main functions', function(accounts) {
