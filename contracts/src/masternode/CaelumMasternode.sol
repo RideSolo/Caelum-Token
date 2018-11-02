@@ -39,14 +39,6 @@ contract CaelumMasternode is InterfaceContracts, CaelumAbstractMasternode {
     }
 
     /**
-     * Override; For some reason, truffle testing does not recognize function.
-     */
-    function setModifierContract (address _contract) onlyOwner public {
-        require (now <= swapStartedBlock + 10 days);
-        _internalMod = InterfaceContracts(_contract);
-    }
-
-    /**
     * @dev Move the voting away from token. All votes will be made from the voting
     */
     function VoteModifierContract (address _contract) onlyVotingContract external {
