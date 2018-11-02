@@ -94,7 +94,7 @@ It is recommended to withdraw all your CLM tokens in a single transaction. For e
 
 #### -  If you swap within 24h after contract deployment:
 
-From the dropdownbox on MyEtherWallet, select the function `upgradeTokens`. As function parameter, you must enter the token address you are swapping against new tokens.
+From the dropdownbox on MyEtherWallet **using the new contract and ABI listed above**, select the function `upgradeTokens`. As function parameter, you must enter the token address you are swapping against new tokens.
 
 If you want to swap the regular CLM tokens, use address `0x7600bF5112945F9F006c216d5d6db0df2806eDc6`
 To swap the failed deployed contract tokens, use address `0x16da16948e5092a3d2aa71aca7b57b8a9cfd8ddb`
