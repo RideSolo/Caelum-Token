@@ -32,14 +32,6 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
     }
 
     /**
-     * Override; For some reason, truffle testing does not recognize function.
-     * Remove before live?
-     */
-    function setModifierContract (address _t) {
-        _internalMod = InterfaceContracts(_t);
-    }
-
-    /**
      * @dev Allow users to upgrade from our previous tokens.
      * For trust issues, addresses are hardcoded.
      * @param _token Token the user wants to swap.
@@ -212,6 +204,15 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      */
     function setMasternodeContract() onlyOwner public  {
         masternodeInterface = ICaelumMasternode(_contract_masternode());
+    }
+
+    /**
+     * Override; For some reason, truffle testing does not recognize function.
+     * Remove before live?
+     */
+    function setModifierContract (address _t) {
+        _internalMod = InterfaceContracts(_t);
+        setMasternodeContract();
     }
 
     /**

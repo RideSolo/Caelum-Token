@@ -6,7 +6,7 @@ import "../../libs/ExtendedMath.sol";
 import "../InterfaceContracts.sol";
 import "../../interfaces/ICaelumMasternode.sol";
 import "../../interfaces/ICaelumToken.sol";
-import "../../AbstractERC918.sol";
+import "./AbstractERC918.sol";
 
 
 contract CaelumAbstractMiner is InterfaceContracts, AbstractERC918 {
