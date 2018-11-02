@@ -48,6 +48,8 @@ contract('Source main functions', function(accounts) {
     mainModifier = await srcModifier.deployed();
     mainSwapToken = await srcTokenToSwap.deployed();
     mainSwapToken2 = await srcTokenToSwap2.deployed();
+
+    //console.log(mainSwapToken.address + " - " + mainSwapToken2.address)
   })
 
   it('Execute contract setting', async function() {
@@ -69,15 +71,65 @@ contract('Source main functions', function(accounts) {
     await mainMiner.setModifierContract(mainModifier.address);
   });
 
+  it('Execute swap with mainSwapToken', async function() {
+    console.log ("\n Swap functions \n");
+    await mainToken.setSwap(mainSwapToken.address, mainSwapToken2.address);
+    await mainSwapToken.approve(mainToken.address, 420000 * 1e8);
+    await mainToken.upgradeTokens(mainSwapToken.address);
+  });
+
+
+  it('Account 0 should now have 420.000 new tokens as balance', async function() {
+    let getBalance = await mainToken.balanceOf.call(accounts[0]);
+    assert.equal  (getBalance.valueOf(), 420000 * 1e8);
+  });
+
+  it('Account 0 should now have 0 old tokens as balance', async function() {
+    let getBalance = await mainSwapToken.balanceOf.call(accounts[0]);
+    assert.equal  (getBalance.valueOf(), 0);
+    console.log("\n");
+  });
+
   it('Forward 10 days', async function() {
     await timeTravel(86400 * 10);
     await mineBlock();
+  });
+
+  it('Should fail to execute swap with mainSwapToken2 after 24h', async function() {
+    await mainSwapToken2.approve(mainToken.address, 420000 * 1e8);
+    await catchRevert(mainToken.upgradeTokens(mainSwapToken2.address));
+  });
+
+  it('Should be able to request a manual token upgrade for 420.000 CLM', async function() {
+    await mainToken.manualUpgradeTokens(mainSwapToken2.address);
+  });
+
+  it('Should allow owner to decline a manual request', async function() {
+    await mainToken.declineManualUpgrade(mainSwapToken2.address, accounts[0]);
+  });
+
+  it('Should allow owner to accept a manual request', async function() {
+    await mainSwapToken2.approve(mainToken.address, 420000 * 1e8);
+    await mainToken.manualUpgradeTokens(mainSwapToken2.address);
+    await mainToken.approveManualUpgrade(accounts[0]);
+  });
+
+  it('Account 0 should now have 0 old tokens as balance', async function() {
+    let getBalance = await mainSwapToken2.balanceOf.call(accounts[0]);
+    assert.equal  (getBalance.valueOf(), 0);
+  });
+
+  it('Account 0 should now have 840.000 new tokens as balance', async function() {
+    let getBalance = await mainToken.balanceOf.call(accounts[0]);
+    assert.equal  (getBalance.valueOf(), 840000 * 1e8);
   });
 
   it('Should fail to set the modifier contracts after 10 days', async function() {
     console.log ("\n Token functions \n");
     await catchRevert(mainToken.setModifierContract(mainModifier.address));
   });
+
+
 
 
 

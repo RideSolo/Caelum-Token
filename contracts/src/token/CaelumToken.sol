@@ -113,7 +113,9 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * @dev Decline a request for manual token swaps
      * @param _holder Holder The user who requests a swap.
      */
-    function declineManualUpgrade(address _holder) onlyOwner public {
+    function declineManualUpgrade(address _token, address _holder) onlyOwner public {
+        require(ERC20(_token).transfer(_holder, manualSwaps[_holder]));
+        tokens[_token][_holder] = tokens[_token][_holder] - manualSwaps[_holder];
         delete manualSwaps[_holder];
         delete hasSwapped[_holder];
     }
@@ -234,6 +236,6 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
         allowedSwapAddress01 = _t;
         allowedSwapAddress02 = _b;
     }
-    
+
 
 }
