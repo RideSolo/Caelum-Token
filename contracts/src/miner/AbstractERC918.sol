@@ -1,6 +1,6 @@
 pragma solidity 0.4.25;
 
-import "./interfaces/EIP918Interface.sol";
+import "../../interfaces/EIP918Interface.sol";
 
 contract AbstractERC918 is EIP918Interface {
 

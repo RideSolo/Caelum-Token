@@ -3,8 +3,7 @@ pragma solidity 0.4.25;
 
 import "./CaelumAbstractMasternode.sol";
 
-
-contract CaelumMasternode is CaelumAbstractMasternode {
+contract CaelumMasternode is InterfaceContracts, CaelumAbstractMasternode {
 
     bool minerSet = false;
     bool tokenSet = false;
@@ -32,14 +31,14 @@ contract CaelumMasternode is CaelumAbstractMasternode {
     }
 
     function getMiningReward() public view returns(uint) {
-        return ICaelumMiner(_contract_miner).getMiningReward();
+        return ICaelumMiner(_internalMod._contract_miner()).getMiningReward();
     }
 
     address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
 
-    function getDataFromContract() onlyOwner public returns(uint) {
+    function getDataFromContract(address _contract) onlyOwner public returns(uint) {
 
-        CaelumMasternode prev = CaelumMasternode(cloneDataFrom);
+        CaelumMasternode prev = CaelumMasternode(_contract);
         (
           uint epoch,
           uint candidate,

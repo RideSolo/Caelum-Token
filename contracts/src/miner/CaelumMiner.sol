@@ -9,12 +9,10 @@ contract CaelumMiner is CaelumAbstractMiner {
     bool ACTIVE_STATE = false;
 
     function setTokenContract(address _contract) {
-        _contract_token = _contract;
         tokenInterface = ICaelumToken(_contract);
     }
 
     function setMasternodeContract(address _contract) onlyOwner public {
-        _contract_masternode = _contract;
         masternodeInterface = ICaelumMasternode(_contract);
     }
 
@@ -90,7 +88,7 @@ contract CaelumMiner is CaelumAbstractMiner {
         uint usercounter
     )
     {
-        return ICaelumMasternode(_contract_masternode).contractProgress();
+        return ICaelumMasternode(_contract_masternode()).contractProgress();
 
     }
 
@@ -101,8 +99,8 @@ contract CaelumMiner is CaelumAbstractMiner {
 
     function getDataFromContract (address _previous_contract) onlyOwner public {
         require (ACTIVE_STATE == false);
-        require(_contract_token != 0);
-        require(_contract_masternode != 0);
+        require(_contract_token() != 0);
+        require(_contract_masternode() != 0);
 
         CaelumAbstractMiner prev = CaelumAbstractMiner(_previous_contract);
         difficulty = prev.difficulty();

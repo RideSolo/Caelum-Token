@@ -1,9 +1,10 @@
 interface ICaelumMasternode {
     function _externalArrangeFlow() external;
-    function rewardsProofOfWork() external returns (uint) ;
-    function rewardsMasternode() external returns (uint) ;
-    function masternodeIDcounter() external returns (uint) ;
-    function masternodeCandidate() external returns (uint) ;
+    function rewardsProofOfWork() external view returns (uint) ;
+    function rewardsMasternode() external view returns (uint) ;
+    function masternodeIDcounter() external view returns (uint) ;
+    function masternodeCandidate() external view returns (uint) ;
     function getUserFromID(uint) external view returns  (address) ;
+    function userCounter() external view returns(uint);
     function contractProgress() external view returns (uint, uint, uint, uint, uint, uint, uint, uint);
 }

@@ -1,11 +1,10 @@
 pragma solidity 0.4.25;
 
-import "./libs/SafeMath.sol";
-import "./interfaces/ICaelumMiner.sol";
-import "./CaelumModifier.sol";
+import "../../libs/SafeMath.sol";
+import "../../interfaces/ICaelumMiner.sol";
+import "../InterfaceContracts.sol";
 
-
-contract CaelumAbstractMasternode is CaelumModifier {
+contract CaelumAbstractMasternode is Ownable {
 
     struct MasterNode {
         address accountOwner;
@@ -63,6 +62,11 @@ contract CaelumAbstractMasternode is CaelumModifier {
         }
 
         genesisAdded = true; // Forever lock this.
+    }
+
+    function addOwner() onlyOwner public {
+        addMasternode(owner);
+        updateMasternodeAsTeamMember(owner);
     }
 
     function addMasternode(address _candidate) internal {

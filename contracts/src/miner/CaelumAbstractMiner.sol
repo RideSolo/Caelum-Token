@@ -1,15 +1,15 @@
 pragma solidity 0.4.25;
 
 
-import "./libs/SafeMath.sol";
-import "./libs/ExtendedMath.sol";
-import "./CaelumModifier.sol";
-import "./interfaces/ICaelumMasternode.sol";
-import "./interfaces/ICaelumToken.sol";
+import "../../libs/SafeMath.sol";
+import "../../libs/ExtendedMath.sol";
+import "../InterfaceContracts.sol";
+import "../../interfaces/ICaelumMasternode.sol";
+import "../../interfaces/ICaelumToken.sol";
 import "./AbstractERC918.sol";
 
 
-contract CaelumAbstractMiner is CaelumModifier, AbstractERC918 {
+contract CaelumAbstractMiner is InterfaceContracts, AbstractERC918 {
     /**
      * CaelumMiner contract.
      *
