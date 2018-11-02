@@ -1,4 +1,4 @@
-pragma solidity 0.4.25;
+pragma solidity 0.4 .25;
 
 import "./CaelumAbstractMiner.sol";
 
@@ -7,16 +7,57 @@ contract CaelumMiner is CaelumAbstractMiner {
     ICaelumToken tokenInterface;
     ICaelumMasternode masternodeInterface;
     bool ACTIVE_STATE = false;
+    uint public gasPriceLimit = 999;
 
-    function setTokenContract(address _contract) {
-        tokenInterface = ICaelumToken(_contract);
+    /**
+     * @dev Allows the owner to set a gas limit on submitting solutions.
+     * courtesy of KiwiToken.
+     * See https://github.com/liberation-online/MineableToken for more details why.
+     */
+
+    modifier checkGasPrice(uint txnGasPrice) {
+        require(txnGasPrice <= gasPriceLimit * 1000000000, "Gas above limits!");
+        _;
     }
 
-    function setMasternodeContract(address _contract) onlyOwner public {
-        masternodeInterface = ICaelumMasternode(_contract);
+    event GasPriceSet(uint8 _gasPrice);
+
+    function setGasPriceLimit(uint8 _gasPrice) onlyOwner public {
+        require(_gasPrice > 0);
+        gasPriceLimit = _gasPrice;
+
+        emit GasPriceSet(_gasPrice); //emit event
     }
 
-    function mint(uint256 nonce, bytes32 challenge_digest) public returns(bool success) {
+    function setTokenContract() {
+        tokenInterface = ICaelumToken(_contract_token);
+    }
+
+    function setMasternodeContract() onlyOwner public {
+        masternodeInterface = ICaelumMasternode(_contract_masternode);
+    }
+
+    /**
+     * Override; For some reason, truffle testing does not recognize function.
+     * Remove before live?
+     */
+    function setModifierContract (address _contract) onlyOwner public {
+        require (now <= swapStartedBlock + 10 days);
+        _internalMod = InterfaceContracts(_contract);
+        setMasternodeContract();
+        setTokenContract();
+    }
+
+    /**
+    * @dev Move the voting away from token. All votes will be made from the voting
+    */
+    function VoteModifierContract (address _contract) onlyVotingContract external {
+        //_internalMod = CaelumModifierAbstract(_contract);
+        setModifierContract(_contract);
+        setMasternodeContract();
+    }
+
+    function mint(uint256 nonce, bytes32 challenge_digest) checkGasPrice(tx.gasprice) public returns(bool success) {
         require(ACTIVE_STATE);
 
         _hash(nonce, challenge_digest);
@@ -41,26 +82,26 @@ contract CaelumMiner is CaelumAbstractMiner {
 
     function _reward() internal returns(uint) {
 
-      uint _pow = masternodeInterface.rewardsProofOfWork();
+        uint _pow = masternodeInterface.rewardsProofOfWork();
 
-      tokenInterface.rewardExternal(msg.sender, 1*1e8 );
+        tokenInterface.rewardExternal(msg.sender, 1 * 1e8);
 
-      return _pow;
+        return _pow;
     }
 
     function _reward_masternode() internal returns(uint) {
 
-      uint _mnReward = masternodeInterface.rewardsMasternode();
-      if (masternodeInterface.masternodeIDcounter() == 0) return 0;
+        uint _mnReward = masternodeInterface.rewardsMasternode();
+        if (masternodeInterface.masternodeIDcounter() == 0) return 0;
 
-      address _mnCandidate = masternodeInterface.getUserFromID(masternodeInterface.masternodeCandidate()); // userByIndex[masternodeCandidate].accountOwner;
-      if (_mnCandidate == 0x0) return 0;
+        address _mnCandidate = masternodeInterface.getUserFromID(masternodeInterface.masternodeCandidate()); // userByIndex[masternodeCandidate].accountOwner;
+        if (_mnCandidate == 0x0) return 0;
 
-      tokenInterface.rewardExternal(_mnCandidate, _mnReward);
+        tokenInterface.rewardExternal(_mnCandidate, _mnReward);
 
-      emit RewardMasternode(_mnCandidate, _mnReward);
+        emit RewardMasternode(_mnCandidate, _mnReward);
 
-      return _mnReward;
+        return _mnReward;
     }
 
     /**
@@ -77,28 +118,27 @@ contract CaelumMiner is CaelumAbstractMiner {
     }
 
     function contractProgress() public view returns
-    (
-        uint epoch,
-        uint candidate,
-        uint round,
-        uint miningepoch,
-        uint globalreward,
-        uint powreward,
-        uint masternodereward,
-        uint usercounter
-    )
-    {
-        return ICaelumMasternode(_contract_masternode()).contractProgress();
+        (
+            uint epoch,
+            uint candidate,
+            uint round,
+            uint miningepoch,
+            uint globalreward,
+            uint powreward,
+            uint masternodereward,
+            uint usercounter
+        ) {
+            return ICaelumMasternode(_contract_masternode()).contractProgress();
 
-    }
+        }
 
     /**
      * @dev Call this function prior to mining to copy all old contract values.
      * This included minted tokens, difficulty, etc..
      */
 
-    function getDataFromContract (address _previous_contract) onlyOwner public {
-        require (ACTIVE_STATE == false);
+    function getDataFromContract(address _previous_contract) onlyOwner public {
+        require(ACTIVE_STATE == false);
         require(_contract_token() != 0);
         require(_contract_masternode() != 0);
 
@@ -112,5 +152,4 @@ contract CaelumMiner is CaelumAbstractMiner {
 
         ACTIVE_STATE = true;
     }
-
 }
