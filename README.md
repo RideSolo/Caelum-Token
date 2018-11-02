@@ -3,8 +3,9 @@
  - Deploy `CaelumToken.sol`
  - Deploy `CaelumMasternode.sol`
  - Deploy `CaelumMiner.sol`
+ - Deploy `CaelumModifierVoting.sol`
 
- On all deployed contract:
+ On the `CaelumModifierVoting.sol` contract:
  - Call `setTokenContract` with the deployed `CaelumToken.sol` address
  - Call `setMiningContract` with the deployed `CaelumMiner.sol` address
  - Call `setMasternodeContract` with the deployed `CaelumMasternode.sol`
@@ -13,10 +14,19 @@
 On `CaelumMasternode.sol`
 
  - Call `addGenesis` if you have genesis accounts to be included
+ - Call `setModifierContract` with the `CaelumModifierVoting` deployed address
 
 On `CaelumToken.sol`
+- Call `setModifierContract` with the `CaelumModifierVoting` deployed address
 
-### Multiple contract usage
+On `CaelumMiner.sol`
+- Call `setModifierContract` with the `CaelumModifierVoting` deployed address
+- Call `getDataFromContract` to copy the values of the old mining contract.
+
+You are now ready to start using Caelum Token.
+
+
+# Multiple contract usage
 Caelum token uses multiple deployed contracts, primarily due to Ethereum contract size limits. This approach leads to a couple of unwanted, but unavoidable situations, who leads in turn to some warnings raised when the code is run trough a security analystic tool.
 
 **Powerfull ownership**
@@ -60,7 +70,7 @@ Caelum uses the `now` function for basic actions. The `now` function can be slig
 
 
 
-# Quickstart guide
+# Quickstart guide to swap tokens
 
 Everyone must swap the old CLM tokens ( deployed at `0x7600bF5112945F9F006c216d5d6db0df2806eDc6` or `0x16Da16948e5092A3D2aA71Aca7b57b8a9CFD8ddb`). This process is fully automated in a way that no human interaction is needed, thus can be considered a safe option to swap tokens.
 
@@ -101,7 +111,10 @@ Confirm the action by clicking the `Write` button.
 The contract will put you in queue for manual verification of your tokens origins. The contract owners will manually approve or decline the swap request.  A decline will only happen if you have tokens generated 24h after the contract upgrade, or malicious attempts to continue solo mining on the old token contract.
 
 
-**Step 4:** After this transaction has been confirmed on the blockchain, you should see the new tokens in your wallet. To verify, you can use the `balanceOf` function to quickly check this.
+**Step 3:** After this transaction has been confirmed on the blockchain, you should see the new tokens in your wallet. To verify, you can use the `balanceOf` function to quickly check this.
 
 
-# Swapping 101
+# Caelum usage
+
+To start mining, enter the `CaelumMiner`contract address `0x0000000000000000000000`in your mining software.
+More details on how to setup a miner can be found at [to complete]
