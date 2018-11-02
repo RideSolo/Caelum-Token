@@ -7,6 +7,7 @@ contract CaelumMasternode is InterfaceContracts, CaelumAbstractMasternode {
 
     bool minerSet = false;
     bool tokenSet = false;
+    uint swapStartedBlock = now;
 
     address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
 
@@ -35,6 +36,22 @@ contract CaelumMasternode is InterfaceContracts, CaelumAbstractMasternode {
 
     function getMiningReward() public view returns(uint) {
         return ICaelumMiner(_internalMod._contract_miner()).getMiningReward();
+    }
+
+    /**
+     * Override; For some reason, truffle testing does not recognize function.
+     */
+    function setModifierContract (address _contract) onlyOwner public {
+        require (now <= swapStartedBlock + 10 days);
+        _internalMod = InterfaceContracts(_contract);
+    }
+
+    /**
+    * @dev Move the voting away from token. All votes will be made from the voting
+    */
+    function VoteModifierContract (address _contract) onlyVotingContract external {
+        //_internalMod = CaelumModifierAbstract(_contract);
+        setModifierContract(_contract);
     }
 
     function getDataFromContract() onlyOwner public returns(uint) {

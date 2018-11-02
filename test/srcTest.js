@@ -429,4 +429,9 @@ contract('Masternode functions', function(accounts) {
     await catchRevert(mainToken.depositCollateral(mainSwapToken.address, 5000 * 1e8));
   })
 
+  it("You can now mine at address:", async function () {
+    await mainMiner.getDataFromContract(mainMiner.address);
+    console.log(mainMiner.address);
+  })
+
 })

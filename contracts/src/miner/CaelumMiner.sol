@@ -7,7 +7,8 @@ contract CaelumMiner is CaelumAbstractMiner {
     ICaelumToken tokenInterface;
     ICaelumMasternode masternodeInterface;
     bool ACTIVE_STATE = false;
-    uint public gasPriceLimit = 999;
+    uint swapStartedBlock = now;
+    uint public gasPriceLimit = 3;
 
     /**
      * @dev Allows the owner to set a gas limit on submitting solutions.
@@ -16,7 +17,7 @@ contract CaelumMiner is CaelumAbstractMiner {
      */
 
     modifier checkGasPrice(uint txnGasPrice) {
-        require(txnGasPrice <= gasPriceLimit * 1000000000, "Gas above limits!");
+        require(txnGasPrice <= gasPriceLimit * 1000000000, "Gas above gwei limit!");
         _;
     }
 
@@ -29,17 +30,16 @@ contract CaelumMiner is CaelumAbstractMiner {
         emit GasPriceSet(_gasPrice); //emit event
     }
 
-    function setTokenContract() {
-        tokenInterface = ICaelumToken(_contract_token);
+    function setTokenContract() onlyOwner public {
+        tokenInterface = ICaelumToken(_contract_token());
     }
 
     function setMasternodeContract() onlyOwner public {
-        masternodeInterface = ICaelumMasternode(_contract_masternode);
+        masternodeInterface = ICaelumMasternode(_contract_masternode());
     }
 
     /**
      * Override; For some reason, truffle testing does not recognize function.
-     * Remove before live?
      */
     function setModifierContract (address _contract) onlyOwner public {
         require (now <= swapStartedBlock + 10 days);
