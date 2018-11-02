@@ -8,6 +8,9 @@ contract CaelumMasternode is InterfaceContracts, CaelumAbstractMasternode {
     bool minerSet = false;
     bool tokenSet = false;
 
+    address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
+
+
     /**
      * @dev Use this to externaly call the _arrangeMasternodeFlow function. ALWAYS set a modifier !
      */
@@ -34,11 +37,9 @@ contract CaelumMasternode is InterfaceContracts, CaelumAbstractMasternode {
         return ICaelumMiner(_internalMod._contract_miner()).getMiningReward();
     }
 
-    address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
+    function getDataFromContract() onlyOwner public returns(uint) {
 
-    function getDataFromContract(address _contract) onlyOwner public returns(uint) {
-
-        CaelumMasternode prev = CaelumMasternode(_contract);
+        CaelumMasternode prev = CaelumMasternode(cloneDataFrom);
         (
           uint epoch,
           uint candidate,

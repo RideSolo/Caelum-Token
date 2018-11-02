@@ -33,8 +33,6 @@ contract CaelumAbstractMasternode is Ownable {
 
     bool genesisAdded = false;
 
-    address cloneDataFrom = 0x7600bF5112945F9F006c216d5d6db0df2806eDc6;
-
     event NewMasternode(address candidateAddress, uint timeStamp);
     event RemovedMasternode(address candidateAddress, uint timeStamp);
 
@@ -278,23 +276,4 @@ contract CaelumAbstractMasternode is Ownable {
             );
         }
 
-    function getDataFromContract() onlyOwner public returns(uint) {
-
-        CaelumAbstractMasternode prev = CaelumAbstractMasternode(cloneDataFrom);
-        (uint epoch,
-            uint candidate,
-            uint round,
-            uint miningepoch,
-            uint globalreward,
-            uint powreward,
-            uint masternodereward,
-            uint usercount) = prev.contractProgress();
-
-
-        masternodeRound = round;
-        miningEpoch = miningepoch;
-        rewardsProofOfWork = powreward;
-        rewardsMasternode = masternodereward;
-
-    }
 }

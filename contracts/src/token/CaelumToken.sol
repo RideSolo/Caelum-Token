@@ -245,30 +245,28 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * Override; For some reason, truffle testing does not recognize function.
      * Remove before live?
      */
-    function setModifierContract (address _t) public {
+    function setModifierContract (address _contract) onlyOwner public {
         require (now <= swapStartedBlock + 10 days);
-        _internalMod = InterfaceContracts(_t);
+        _internalMod = InterfaceContracts(_contract);
         setMasternodeContract();
     }
 
     /**
     * @dev Move the voting away from token. All votes will be made from the voting
     */
-    function VoteModifierContract (address _t) onlyVotingContract external {
-        //_internalMod = CaelumModifierAbstract(_t);
-        setModifierContract(_t);
+    function VoteModifierContract (address _contract) onlyVotingContract external {
+        //_internalMod = CaelumModifierAbstract(_contract);
+        setModifierContract(_contract);
         setMasternodeContract();
     }
-
 
     /**
      * @dev Needed for testnet only. Comment codeblock out before deploy, leave it as example.
      */
-
-    function setSwap(address _t, address _b) onlyOwner public {
+    function setSwap(address _contract, address _contract_2) onlyOwner public {
         require (isOnTestNet == true);
-        allowedSwapAddress01 = _t;
-        allowedSwapAddress02 = _b;
+        allowedSwapAddress01 = _contract;
+        allowedSwapAddress02 = _contract_2;
     }
 
 
