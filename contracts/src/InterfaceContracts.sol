@@ -3,7 +3,7 @@ import "../libs/Ownable.sol";
 contract InterfaceContracts is Ownable {
     InterfaceContracts public _internalMod;
 
-    function setModifierContract (address _t) {
+    function setModifierContract (address _t) onlyOwner public {
         _internalMod = InterfaceContracts(_t);
     }
 
@@ -12,27 +12,27 @@ contract InterfaceContracts is Ownable {
           _;
       }
 
-      modifier onlyTokenContract() {
-          require(msg.sender == _internalMod._contract_token(), "Wrong sender");
-          _;
-      }
+    modifier onlyTokenContract() {
+      require(msg.sender == _internalMod._contract_token(), "Wrong sender");
+      _;
+    }
 
-      modifier onlyMasternodeContract() {
-          require(msg.sender == _internalMod._contract_masternode(), "Wrong sender");
-          _;
-      }
+    modifier onlyMasternodeContract() {
+      require(msg.sender == _internalMod._contract_masternode(), "Wrong sender");
+      _;
+    }
 
-      modifier onlyVotingOrOwner() {
-          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
-          _;
-      }
+    modifier onlyVotingOrOwner() {
+      require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
+      _;
+    }
 
-      modifier onlyVotingContract() {
-          require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
-          _;
-      }
+    modifier onlyVotingContract() {
+      require(msg.sender == _internalMod._contract_voting() || msg.sender == owner, "Wrong sender");
+      _;
+    }
 
-      function _contract_voting () public view returns (address) {
+    function _contract_voting () public view returns (address) {
         return _internalMod._contract_voting();
     }
 

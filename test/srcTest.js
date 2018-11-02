@@ -435,3 +435,36 @@ contract('Masternode functions', function(accounts) {
   })
 
 })
+
+
+contract('Mining functions', function(accounts) {
+  var mainToken
+  var mainSwapToken
+  var mainSwapToken2
+  var mainMiner
+  var mainMasternode
+  var mainModifier
+
+  it("can deploy ", async function () {
+    mainToken = await srcToken.deployed();
+    mainMiner = await scrMiner.deployed();
+    mainMasternode = await srcMasternode.deployed();
+    mainModifier = await srcModifier.deployed();
+    mainSwapToken = await srcTokenToSwap.deployed();
+    mainSwapToken2 = await srcTokenToSwap2.deployed();
+
+    await mainModifier.setMasternodeContract(mainMasternode.address);
+    await mainModifier.setMiningContract(mainMiner.address);
+    await mainModifier.setTokenContract(mainToken.address);
+
+    await mainMasternode.setModifierContract(mainModifier.address);
+    await mainToken.setModifierContract(mainModifier.address);
+    await mainMiner.setModifierContract(mainModifier.address);
+  })
+
+  it("You can now mine at address:", async function () {
+    await mainMiner.getDataFromContract(mainMiner.address);
+    console.log(mainMiner.address);
+  })
+
+})
