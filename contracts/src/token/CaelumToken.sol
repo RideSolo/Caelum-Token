@@ -93,6 +93,39 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
     }
 
     /**
+     * @dev Allow users to partially upgrade manualy from our previous tokens.
+     * For trust issues, addresses are hardcoded.
+     * Used when a user failed to swap in time.
+     * Dev should manually verify the origin of these tokens before allowing it.
+     * @param _token Token the user wants to swap.
+     */
+    function manualUpgradePartialTokens(address _token, uint _amount) public {
+        require(!hasSwapped[msg.sender], "User already swapped");
+        require(now >= swapStartedBlock + 1 days, "Timeframe incorrect");
+        require(_token == allowedSwapAddress01 || _token == allowedSwapAddress02, "Token not allowed to swap.");
+
+        uint amountToUpgrade = _amount; //ERC20(_token).balanceOf(msg.sender);
+        require(amountToUpgrade <= ERC20(_token).allowance(msg.sender, this));
+
+        uint newBalance = ERC20(_token).balanceOf(msg.sender) - (amountToUpgrade);
+        if (ERC20(_token).transferFrom(msg.sender, this, amountToUpgrade)) {
+
+            require(ERC20(_token).balanceOf(msg.sender) == newBalance, "Balance error.");
+
+            if(
+              ERC20(allowedSwapAddress01).balanceOf(msg.sender) == 0  &&
+              ERC20(allowedSwapAddress02).balanceOf(msg.sender) == 0
+            ) {
+              hasSwapped[msg.sender] = true;
+            }
+
+            tokens[_token][msg.sender] = tokens[_token][msg.sender].add(amountToUpgrade);
+            manualSwaps[msg.sender] = amountToUpgrade;
+            emit NewSwapRequest(msg.sender, amountToUpgrade);
+        }
+    }
+
+    /**
      * @dev Due to some bugs in the previous contracts, a handfull of users will
      * be unable to fully withdraw their masternodes. Owner can replace those tokens
      * who are forever locked up in the old contract with new ones.
@@ -100,6 +133,7 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      function getLockedTokens(address _contract, address _holder) public view returns(uint) {
          return CaelumAcceptERC20(_contract).tokens(_contract, _holder);
      }
+
     /**
      * @dev Approve a request for manual token swaps
      * @param _holder Holder The user who requests a swap.
