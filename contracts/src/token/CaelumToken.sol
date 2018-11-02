@@ -198,11 +198,10 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
 
     }
 
-
     /**
      * @dev pull new masternode contract from the modifier contract
      */
-    function setMasternodeContract() onlyOwner public  {
+    function setMasternodeContract() internal  {
         masternodeInterface = ICaelumMasternode(_contract_masternode());
     }
 
@@ -210,7 +209,8 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
      * Override; For some reason, truffle testing does not recognize function.
      * Remove before live?
      */
-    function setModifierContract (address _t) {
+    function setModifierContract (address _t) public {
+        require (now <= swapStartedBlock + 10 days);
         _internalMod = InterfaceContracts(_t);
         setMasternodeContract();
     }
@@ -220,6 +220,8 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
     */
     function VoteModifierContract (address _t) onlyVotingContract external {
         //_internalMod = CaelumModifierAbstract(_t);
+        setModifierContract(_t);
+        setMasternodeContract();
     }
 
 
@@ -232,6 +234,6 @@ contract CaelumToken is CaelumAcceptERC20, StandardToken {
         allowedSwapAddress01 = _t;
         allowedSwapAddress02 = _b;
     }
-
+    
 
 }

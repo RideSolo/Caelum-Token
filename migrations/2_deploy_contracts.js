@@ -4,6 +4,8 @@ var caelumTokenToSwap2 = artifacts.require("./CaelumTokenToSwap2.sol");
 var caelumMasternode = artifacts.require("./CaelumMasternode.sol");
 // src
 var srcToken = artifacts.require("./src/token/CaelumToken.sol");
+var srcTokenToSwap = artifacts.require("./src/token/tokenToSwap.sol");
+var srcTokenToSwap2 = artifacts.require("./src/token/tokenToSwap2.sol");
 var scrMiner = artifacts.require("./src/miner/CaelumMiner.sol");
 var srcMasternode = artifacts.require("./src/masternode/CaelumMasternode.sol");
 var srcModifier = artifacts.require("./src/contracts/CaelumModifierVoting.sol");
@@ -19,4 +21,6 @@ module.exports = function(deployer) {
   deployer.deploy(scrMiner);
   deployer.deploy(srcMasternode);
   deployer.deploy(srcModifier);
+  deployer.deploy(srcTokenToSwap);
+  deployer.deploy(srcTokenToSwap2);
 };
