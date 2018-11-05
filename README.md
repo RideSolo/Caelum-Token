@@ -5,12 +5,16 @@ Some documentation is still WIP but will be completed ASAP!
 
 ### Masternodes
 [Setup](#masternode-setup-procedure)
+
 [Withdrawal](#masternode-withdrawal-procedure)
+
 [Statistics and data](#masternode-statistics-and-data)
 
 ### Deployment and general info
 [Important changes over EIP918](#important-changes-over-eip918)
+
 [Multiple contract setups](#multiple-contract-usage)
+
 [Previous token swap to new tokens](#quickstart-guide-to-swap-tokens)
 
 
