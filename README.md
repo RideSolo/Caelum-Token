@@ -1,3 +1,33 @@
+# Masternode guide
+
+To setup a masternode, you will need to have **5000 CLM** available.
+
+## Masternode Setup procedure
+
+Step 1: Go to MyEtherWallet, and select `contracts`. Make sure that you are connected to the main Ethereum network.
+
+![Alt text](https://monosnap.com/image/RjZNeZmsApanXFS4ePpBIqJXYTcL8q.png)
+Step 2: Enter the CLM token address `0xc71a7ecd96fef6e34a5c296bee9533f1deb0e3c1` and the ABI (Copy from the bottom section of this documentation), click `access`
+
+Step 3: From the dropdown box, select `approve`. Enter the token contract address listed in step 1, and set the `_value`at `500000000000` This is 5000 CLM tokens + 8 decimals. Access and unlock your wallet and `write` the transaction.
+
+![Alt text](https://monosnap.com/image/fiO0JtWbw2U9SOaJR7e0kF44IQjP6n.png)
+
+Step 4: Select the `depositCollateral` from the dropdownbox after the `approve` transaction is confirmed. Use the same parameters as used on step 3 for both `token` as `address`.  Access and unlock your wallet and `write` the transaction.
+
+![Alt text](https://monosnap.com/image/Qv9mdlIgOZksAu0zv8XNmOUYnXuhCO.png)
+Step 5: After the transaction has confirmed, you can go to the `CaelumMasternode contract` directly on Etherscan and select the `read contract` tabpage. Scroll down to `option 13: isMasternodeOwner`, and enter your own address used to deposit the collateral. If you executed the steps above correctly, it should return `true`.
+
+![Alt text](https://monosnap.com/image/2IdOOQRRVN8dUpcQJ8rHjHD5QdbxRD.png)
+
+
+**Congratulations, you are now a Caelum Masternode owner!** Rewards will be sent to your wallet automatically, no interaction is needed from user perspective!
+
+
+## Masternode withdrawal procedure
+
+You can stop your masternode at any given time. The token you deposited as collateral will be sent back to your wallet on the fly. To do so, execute step 4 from the masternode setup guide, and select the `withdrawCollateral` method from the dropdownbox. Your masternode will be disabled as soon as the transaction has been confirmed by the network, and the tokens should be back in your wallet within a couple of minutes.
+
 # Important changes over EIP918
 
 Before working with Caelum, there are a few fundamental changes over the general EIP918 standard in terms of rewards.
