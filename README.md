@@ -16,7 +16,7 @@ Step 3: From the dropdown box, select `approve`. Enter the token contract addres
 Step 4: Select the `depositCollateral` from the dropdownbox after the `approve` transaction is confirmed. Use the same parameters as used on step 3 for both `token` as `address`.  Access and unlock your wallet and `write` the transaction.
 
 ![Alt text](https://monosnap.com/image/Qv9mdlIgOZksAu0zv8XNmOUYnXuhCO.png)
-Step 5: After the transaction has confirmed, you can go to the `CaelumMasternode contract` directly on Etherscan and select the `read contract` tabpage. Scroll down to `option 13: isMasternodeOwner`, and enter your own address used to deposit the collateral. If you executed the steps above correctly, it should return `true`.
+Step 5: After the transaction has confirmed, you can go to the `CaelumMasternode contract` directly on Etherscan ( https://etherscan.io/address/0x3b1b3f92d85ef134fb253c1e976346430eab6b37#readContract ) and select the `read contract` tabpage. Scroll down to `option 13: isMasternodeOwner`, and enter your own address used to deposit the collateral. If you executed the steps above correctly, it should return `true`.
 
 ![Alt text](https://monosnap.com/image/2IdOOQRRVN8dUpcQJ8rHjHD5QdbxRD.png)
 
@@ -27,6 +27,21 @@ Step 5: After the transaction has confirmed, you can go to the `CaelumMasternode
 ## Masternode withdrawal procedure
 
 You can stop your masternode at any given time. The token you deposited as collateral will be sent back to your wallet on the fly. To do so, execute step 4 from the masternode setup guide, and select the `withdrawCollateral` method from the dropdownbox. Your masternode will be disabled as soon as the transaction has been confirmed by the network, and the tokens should be back in your wallet within a couple of minutes.
+
+## Masternode statistics and data
+
+To see your masternodes, please go to the Etherscan masternode page listed in step 5 from the masternode setup guide. This will give you some options to interact with the contract and get data.
+
+ - Option 13: `isMasternodeOwner` 		- Returns true or false
+ - Option 14: `getLastPerUser` 			- Returns the last masternode in your account
+ - Option 16: `getLastActiveBy` 		- Returns the last active masternode in your account
+ - Option 17 `userHasActiveNodes` 		- Returns true or false if the account has active nodes
+ - Option 22: `belongsToUser` 			- Returns an array of all masternodes for the account
+ - Option 26: `masternodeInfo` 			- Returns general data about a specific masternode ID
+
+
+
+
 
 # Important changes over EIP918
 
