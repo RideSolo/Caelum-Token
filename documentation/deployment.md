@@ -34,7 +34,7 @@ Deployed at `0x3b1b3f92d85ef134fb253c1e976346430eab6b37`
 
 ### CaelumMiner:
 
-Deployed at `0x28723f0bb2c2040caa9e2e8fe487bca7c00fc300`
+Deployed at `0xa38fcedd23de2191dc27f9a0240ac170be0a14fe`
 
 ### CaelumModifierVoting
 
